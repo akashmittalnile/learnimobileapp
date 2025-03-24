@@ -1,0 +1,16 @@
+{
+    "plugins": [
+      ["module-resolver", {
+        "root": ["./"],
+        "alias": {
+          "screens": "./src/screens",
+          "component":"./src/component",
+          "global":"./src/global",
+          "assets":"./src/assets",
+          "navigation":"./src/navigation",
+          "modals":"./src/modals",
+          "reduxTooklit":"./src/reduxTooklit"
+        }
+      }]
+    ]
+  }
