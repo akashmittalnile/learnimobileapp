@@ -32,8 +32,6 @@ const CustomDrawer = ({navigation}) => {
   const isDrawerOpen = useDrawerStatus();
   //hook : states
   const [profileData, setProfileData] = useState({});
-  console.log('profileData', profileData);
-
   //function : nav func
   const resetIndexGoToSplash = CommonActions.reset({
     index: 1,
@@ -80,7 +78,6 @@ const CustomDrawer = ({navigation}) => {
         API_Endpoints.profile,
         token,
       );
-      console.log('response', response);
       if (status) {
         setProfileData(response.data);
       }

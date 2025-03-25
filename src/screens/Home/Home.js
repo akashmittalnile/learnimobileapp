@@ -68,8 +68,6 @@ const Home = ({navigation}) => {
         API_Endpoints.home,
         token,
       );
-      console.log('response home', response);
-
       if (status) {
         setHomeData({
           categories: response?.data?.category,
@@ -94,7 +92,7 @@ const Home = ({navigation}) => {
         );
       }
     } catch (err) {
-      console.log('error in getting cart count home', err);
+      console.error('error in getting cart count home', err);
     }
   };
 

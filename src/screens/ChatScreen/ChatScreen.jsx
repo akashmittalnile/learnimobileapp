@@ -84,8 +84,6 @@ const ChatScreen = ({route}) => {
   };
   //function : render func
   const chatRenderFunction = ({item}) => {
-    console.log('itm', item);
-
     return (
       <View
         key={item.id}

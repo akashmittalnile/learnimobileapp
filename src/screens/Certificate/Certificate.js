@@ -39,7 +39,7 @@ const Certificate = () => {
         setCertificatesData(response?.data?.data);
       }
     } catch (err) {
-      console.log('error in getting certificates data', err);
+      console.error('error in getting certificates data', err);
     } finally {
       setLoader(false);
     }

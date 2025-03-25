@@ -28,7 +28,7 @@ import {
 import Background from 'assets/svgs/background.svg';
 import CartItem from 'component/CartItem/CartItem';
 import SizeBox from 'component/SizeBox/SizeBox';
-import { MEDIUM } from 'global/Fonts';
+import {MEDIUM} from 'global/Fonts';
 // import Item from '../../../components/Item/Item';
 // import ShippingModal from '../../../modals/ShippingModal/ShippingModal';
 
@@ -126,7 +126,7 @@ const Cart = ({navigation, dispatch}) => {
       <ScrollView style={styles.mainView}>
         <Background style={StyleSheet.absoluteFill} />
         {cartListData?.items?.length > 0 ? (
-          <View style={{marginTop:20,}}>
+          <View style={{marginTop: 20}}>
             <FlatList
               data={cartListData?.items}
               keyExtractor={(item, index) => index.toString()}
@@ -144,7 +144,7 @@ const Cart = ({navigation, dispatch}) => {
                 style={[
                   styles.summaryContainer,
                   {
-                    width: dimensions.SCREEN_WIDTH * 0.90,
+                    width: dimensions.SCREEN_WIDTH * 0.9,
                     alignSelf: 'center',
                     borderWidth: 1,
                     borderColor: Colors.LIGHT_PURPLE,

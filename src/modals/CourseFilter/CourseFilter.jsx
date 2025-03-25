@@ -16,7 +16,12 @@ import {styles} from './CourseFilterStyle';
 //import : modals
 //import : redux
 
-const CourseFilter = ({visible, setVisibility, nextFunction = () => {}}) => {
+const CourseFilter = ({
+  visible,
+  setIsFilteredAppplied = () => {},
+  setVisibility,
+  nextFunction = () => {},
+}) => {
   //hook : states
   const [selectedPriceFilter, setSelectedPriceFilter] = useState('');
   const [selectedRatingFilter, setSelectedRatingFilter] = useState('');
@@ -45,7 +50,16 @@ const CourseFilter = ({visible, setVisibility, nextFunction = () => {}}) => {
   const applyFilters = () => {
     const data = {
       highlow: selectedPriceFilter,
+      highlow_name:
+        selectedPriceFilter != ''
+          ? Constants?.price_filter_value.find(e => e.id == selectedPriceFilter)
+              .name
+          : '',
       ratings: selectedRatingFilter,
+      ratings_name:
+        selectedRatingFilter != ''
+          ? `${[4, 3, 2, 1].find(e => e == selectedRatingFilter)} and more`
+          : '',
       category_id: selectedCategory,
       category_name:
         selectedCategory != ''
@@ -57,9 +71,12 @@ const CourseFilter = ({visible, setVisibility, nextFunction = () => {}}) => {
           ? subCategoriesData.find(e => e.id == selectedSubCategory).name
           : '',
     };
+
+    setIsFilteredAppplied(true);
     closeModal();
-    nextFunction(data);
+    nextFunction(data); // Send filters to parent
   };
+
   const getCategories = async () => {
     setShowLoader(true);
     try {
@@ -231,13 +248,21 @@ const CourseFilter = ({visible, setVisibility, nextFunction = () => {}}) => {
               alignSelf: 'center',
               marginTop: 41,
               marginBottom: 10,
-              backgroundColor: Colors.THEME_GOLD,
+              backgroundColor: Colors.GREEN,
             }}
             onPress={() => applyFilters()}
           />
           <TouchableOpacity
             onPress={() => resetFilter()}
-            style={{alignSelf: 'center'}}>
+            style={{
+              alignSelf: 'center',
+              borderWidth: 1,
+              width: '90%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 10,
+              borderRadius: 10,
+            }}>
             <MyText
               text="Reset"
               textColor={Colors.DARK_GREY}
