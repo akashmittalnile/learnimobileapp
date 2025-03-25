@@ -36,6 +36,7 @@ const Certificate = () => {
       const token = await AsyncStorage.getItem('token');
       const response = await GetApiWithToken(API_Endpoints.certificates, token);
       if (response?.data?.status) {
+        console.log('qwer',response?.data?.data )
         setCertificatesData(response?.data?.data);
       }
     } catch (err) {

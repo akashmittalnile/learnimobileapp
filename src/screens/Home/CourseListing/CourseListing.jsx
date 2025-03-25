@@ -29,14 +29,14 @@ import {Colors, MyIcon, Service} from 'global/index';
 import {styles} from './CourseListingStyle';
 //import : modals
 import CourseFilter from 'modals/CourseFilter/CourseFilter';
+import {BOLD, MEDIUM} from 'global/Fonts';
+import NoDataFound from 'component/NoDataFound/NoDataFound';
 //import : redux
 
 const CourseListing = ({navigation, route}) => {
   //variables
   const isFocused = useIsFocused();
   const {data} = route.params;
-  const currentAppliedFilter = useRef('');
-
   //hook : states
   const [coursesData, setCoursesData] = useState([]);
   //hook : modal states
@@ -44,6 +44,11 @@ const CourseListing = ({navigation, route}) => {
   const [showBaseLoader, setShowBaseLoader] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
   const [tempSearchedText, setTempSearchedText] = useState('');
+  //hook : filter states
+  const [tempFilters, setTempFilters] = useState({});
+  const [appliedFilters, setAppliedFilters] = useState({});
+  const [isFilteredApplied, setIsFilteredAppplied] = useState(false);
+
   //variables : redux variables
   const gotoTrendingCourses = () => {
     // navigation.navigate(ScreenNames.TRENDING_COURSES);
@@ -63,6 +68,39 @@ const CourseListing = ({navigation, route}) => {
   const searchHandle = text => {
     setTempSearchedText(text);
     debouncedSearch(text);
+  };
+  const handleFilters = filters => {
+    setAppliedFilters({
+      Category: filters.category_name || '',
+      'Sub Category': filters.sub_category_name || '',
+      Price: filters.highlow_name || '',
+      Ratings: filters.ratings_name ? `${filters.ratings} and up` : '',
+    });
+    setTempFilters(filters);
+    setIsFilteredAppplied(Object.keys(filters).some(key => filters[key]));
+    getCourses(filters);
+  };
+
+  const removeFilter = key => {
+    const filterKeys = {
+      Category: 'category_id',
+      'Sub Category': 'sub_category_id',
+      Price: 'highlow',
+      Ratings: 'ratings',
+    };
+
+    const updatedFilters = {...tempFilters};
+    delete updatedFilters[filterKeys[key]]; // ✅ Removes correct filter key
+
+    setAppliedFilters(prev => {
+      const newFilters = {...prev};
+      delete newFilters[key];
+      return newFilters;
+    });
+    console.log('updatedFilters', updatedFilters);
+    setTempFilters(updatedFilters);
+    getCourses(updatedFilters);
+    setIsFilteredAppplied(Object.keys(updatedFilters).length > 0);
   };
 
   //function : serv func
@@ -118,8 +156,7 @@ const CourseListing = ({navigation, route}) => {
   //hook : useEffect
   useEffect(() => {
     initLoader();
-
-    return () => {};
+    return () => debouncedSearch.cancel();
   }, [isFocused]);
 
   //UI
@@ -146,32 +183,50 @@ const CourseListing = ({navigation, route}) => {
               <MyIcon.Ionicons name="filter" size={28} color={Colors.WHITE} />
             }
             onPress={() => setShowFilter(true)}
+            showDot={() => (isFilteredApplied ? true : false)}
             placeholderTextColor={Colors.GRAY}
           />
-          {Object.keys(currentAppliedFilter?.current).length > 0 && (
+          {isFilteredApplied && (
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                columnGap: 10,
-                marginTop: 10,
                 flexWrap: 'wrap',
-                rowGap: 10,
+                marginVertical: 10,
               }}>
-              <FilterItem
-                title={'Categories: '}
-                value={currentAppliedFilter?.current?.category_name}
-              />
-              <FilterItem
-                title={'Sub Categories: '}
-                value={currentAppliedFilter?.current?.sub_category_name}
-              />
-              <FilterItem
-                title={'Price: '}
-                value={currentAppliedFilter?.current?.highlow}
-              />
+              {Object.entries(appliedFilters).map(([key, value]) =>
+                value ? (
+                  <View
+                    key={key}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: Colors.DARK_PURPLE,
+                      borderRadius: 20,
+                      paddingHorizontal: 10,
+                      padding: 5,
+                      margin: 5,
+                      columnGap: 10,
+                    }}>
+                    <MyText
+                      text={`${key.replace(/_/g, ' ')}: ${value}`}
+                      fontSize={10}
+                      textColor={Colors.WHITE}
+                      fontFamily={MEDIUM}
+                    />
+                    <TouchableOpacity onPress={() => removeFilter(key)}>
+                      <MyIcon.Ionicons
+                        name="close-circle"
+                        size={18}
+                        color={Colors.WHITE}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ) : null,
+              )}
             </View>
           )}
+
           <FlatList
             data={coursesData || []}
             showsVerticalScrollIndicator={false}
@@ -189,6 +244,9 @@ const CourseListing = ({navigation, route}) => {
             contentContainerStyle={{
               paddingBottom: '50%',
             }}
+            ListEmptyComponent={() => {
+              return <NoDataFound />;
+            }}
           />
         </View>
 
@@ -196,10 +254,8 @@ const CourseListing = ({navigation, route}) => {
         <CourseFilter
           visible={showFilter}
           setVisibility={setShowFilter}
-          nextFunction={filterData => {
-            currentAppliedFilter.current = filterData;
-            getCourses(filterData);
-          }}
+          setIsFilteredAppplied={setIsFilteredAppplied}
+          nextFunction={handleFilters}
         />
       </View>
     );

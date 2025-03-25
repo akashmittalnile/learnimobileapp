@@ -3221,6 +3221,15 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNImageCropPicker (0.42.0):
+    - React-Core
+    - React-RCTImage
+    - RNImageCropPicker/QBImagePickerController (= 0.42.0)
+    - TOCropViewController (~> 2.7.4)
+  - RNImageCropPicker/QBImagePickerController (0.42.0):
+    - React-Core
+    - React-RCTImage
+    - TOCropViewController (~> 2.7.4)
   - RNReanimated (3.17.1):
     - DoubleConversion
     - glog
@@ -3492,6 +3501,7 @@ PODS:
     - StripeUICore (= 24.4.1)
   - StripeUICore (24.4.1):
     - StripeCore (= 24.4.1)
+  - TOCropViewController (2.7.4)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -3587,6 +3597,7 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -3634,6 +3645,7 @@ SPEC REPOS:
     - StripePaymentSheet
     - StripePaymentsUI
     - StripeUICore
+    - TOCropViewController
 
 EXTERNAL SOURCES:
   boost:
@@ -3799,6 +3811,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNImageCropPicker:
+    :path: "../node_modules/react-native-image-crop-picker"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -3921,6 +3935,7 @@ SPEC CHECKSUMS:
   RNFBFirestore: 3ff7c559fef570b2546c03129d7b7ab5b8fba8ff
   RNFBMessaging: fde05e1048b26d59de854920f10e5632260491d9
   RNGestureHandler: 0a16f3f13829c01268ae55610a40b57b713c8161
+  RNImageCropPicker: 64b6bec9ec185ee59b71a93d7058816bd0e1916e
   RNReanimated: 2856567d4514358d78adefe31e89d6b67bd1da28
   RNScreens: 77f93ec55b749c49549b447527ebf78e990125f3
   RNSVG: 58d18dfd1774ad6be87c14200a53c988c233f3b9
@@ -3937,6 +3952,7 @@ SPEC CHECKSUMS:
   StripePaymentSheet: da0ee282723f3c0c87c52b5e5cc3eb7e1344eeb9
   StripePaymentsUI: 70414581d3d14089831e370008b705ef03c7cce0
   StripeUICore: f11561a53f81e210398b4f1bd75f1e87b101197d
+  TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: 93a4c16be50e6f29a7ef8e2b19505d7857c651fb
 
 PODFILE CHECKSUM: dac58cd81b5269bb549f223189e91e67b4bad52a

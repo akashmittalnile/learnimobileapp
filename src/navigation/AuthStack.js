@@ -32,6 +32,7 @@ import CourseListing from 'screens/Home/CourseListing/CourseListing';
 import WebViewPage from 'screens/Home/WebViewPage/WebViewPage';
 import MyCourses from 'screens/Home/MyCourses/MyCourses';
 import Search from 'screens/Search/Search';
+import ImageView from 'screens/ImageView/ImageView';
 const AuthStack = () => {
   //variables
   const Stack = createStackNavigator();
@@ -76,6 +77,7 @@ const AuthStack = () => {
         component={CourseListing}
       />
       <Stack.Screen name={ScreenNames.WEB_VIEW_PAGE} component={WebViewPage} />
+      <Stack.Screen name={ScreenNames.IMAGE_VIEW} component={ImageView} />
       <Stack.Screen name={ScreenNames.MY_COURSES} component={MyCourses} />
       <Stack.Screen name={ScreenNames.SEARCH} component={Search} />
       {/* 

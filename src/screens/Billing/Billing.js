@@ -224,20 +224,27 @@ const Billing = ({navigation, dispatch}) => {
   const openAddCardModal = () => {
     setShowAddCardModal(true);
   };
-  const resetIndexGoToMyOrders = CommonActions.reset({
-    index: 1,
-    // routes: [{name: ScreenNames.MY_ORDERS}],
-    routes: [
-      {
-        name: ScreenNames.BOTTOM_TAB,
-        state: {
-          routes: [{name: ScreenNames.MY_ORDERS}],
-        },
-      },
-    ],
-  });
+  // const resetIndexGoToMyOrders = CommonActions.reset({
+  //   index: 1,
+  //   routes: [
+  //     {
+  //       name: ScreenNames.BOTTOM_TAB,
+  //       state: {
+  //         routes: [{name: ScreenNames.MY_ORDERS}],
+  //       },
+  //     },
+  //   ],
+  // });
+
+  const resetIndexGoToMyOrders = () => {
+    navigation.reset({
+      index: 0, 
+      routes: [{ name: ScreenNames.BOTTOM_TAB }],
+    });
+  }
+
   const gotoMyCourses = () => {
-    navigation.dispatch(resetIndexGoToMyOrders);
+    resetIndexGoToMyOrders()
   };
   const changeSelectedCard = id => {
     setSelectedCard(id);
@@ -497,6 +504,9 @@ const Billing = ({navigation, dispatch}) => {
                 marginVertical: 10,
                 borderWidth: 0.2,
                 borderColor: GREEN,
+              }}
+              cardStyle={{
+                textColor: 'black'
               }}
             />
           )}

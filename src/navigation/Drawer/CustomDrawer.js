@@ -23,16 +23,52 @@ import YTSvg from 'assets/svgs/drawersvgs/youtube.svg';
 import INSTASvg from 'assets/svgs/drawersvgs/insta.svg';
 import {BOLD} from 'global/Fonts';
 import {ScreenNames, Service} from 'global/index';
-import {API_Endpoints} from 'global/Service';
+import {API_Endpoints, GetApiWithToken} from 'global/Service';
 //import : styles
 import {styles} from './CustomDrawerStyle';
+import firestore from '@react-native-firebase/firestore';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCartCount} from 'reduxTooklit/CountSlice';
 
 const CustomDrawer = ({navigation}) => {
   //variables
+  const dispatch = useDispatch();
+  const chatCount = useSelector(state => state.count.chatCount);
   const isDrawerOpen = useDrawerStatus();
   //hook : states
   const [profileData, setProfileData] = useState({});
   console.log('profileData', profileData);
+
+  useEffect(() => {
+    const adminId = 1;
+    const docId = `${adminId.toString()}-${profileData?.id?.toString()}`;
+    const MessageRef = firestore()
+      .collection('Chat')
+      .doc(docId)
+      .collection('Messages')
+      .orderBy('createdAt', 'desc');
+    const unSubscribe = MessageRef.onSnapshot(_ => {
+      setTimeout(() => {
+        getUnseenMessageCount();
+      }, 300);
+    });
+    return () => unSubscribe();
+  }, [profileData?.id]);
+
+  const getUnseenMessageCount = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const response = await GetApiWithToken(
+        API_Endpoints.unseenMessageCount,
+        token,
+      );
+      if (response?.data?.status) {
+        dispatch(setCartCount({chatCount: response?.data?.data}));
+      }
+    } catch (err) {
+      console.log('getting error in unseen message count', err);
+    }
+  };
 
   //function : nav func
   const resetIndexGoToSplash = CommonActions.reset({
@@ -120,7 +156,7 @@ const CustomDrawer = ({navigation}) => {
           />
           <DrawerItem title={'About us'} icon={<InfoSvg />} />
           <DrawerItem
-            title={'Chat'}
+            title={`Chat ${chatCount > 0 ? `(${chatCount})` : ''}`}
             icon={<HeadPhoneSvg />}
             onPress={() => gotoChatScreen()}
           />

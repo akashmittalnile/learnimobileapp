@@ -174,6 +174,7 @@ const Signin = () => {
           showLearneLogo={false}
           heading="Sign In"
           headingStyle={{color: 'black'}}
+          showCart={false}
         />
         <View style={styles.subContainer}>
           <LearneLogo height={responsiveHeight(8)} width="60%" />

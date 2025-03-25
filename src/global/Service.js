@@ -2,7 +2,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import : BASE URL
-const baseURL = 'https://nileprojects.in/learni/api/';
+export const baseURL = 'https://nileprojects.in/learni/api/';
 //import : endpoints
 export const API_Endpoints = {
   login: 'login',
@@ -42,6 +42,10 @@ export const API_Endpoints = {
   my_order: 'my-order?type=1',
   order_detail: 'order-details',
   my_courses: 'my-courses',
+  chatImage: 'chat-image',
+  certificates: 'certificates',
+  unseenMessageCount: 'unseen-message-count',
+  seenMessage: 'seen-message'
 };
 
 //function : imp function
