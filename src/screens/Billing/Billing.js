@@ -59,6 +59,8 @@ const Billing = ({navigation, dispatch}) => {
       setRefreshing(false);
     });
   }, []);
+
+  //function : serv func
   const getData = async () => {
     setShowLoader(true);
     try {
@@ -90,7 +92,7 @@ const Billing = ({navigation, dispatch}) => {
         API_Endpoints.card_list,
         token,
       );
-      console.log('response', response);
+      console.log('cart list response', response);
 
       if (status) {
         setCardList(response.data);
@@ -105,33 +107,22 @@ const Billing = ({navigation, dispatch}) => {
     }
     setShowLoader(false);
   };
-  const handlePayClick = async (
-    order_id,
-    total_amount,
-    stripeToken,
-    cardID,
-  ) => {
+  const handlePayClick = async (order_id, total_amount) => {
     setShowLoader(true);
     try {
       const myData = new FormData();
-      myData.append('stripeToken', stripeToken);
+      // myData.append('stripeToken', stripeToken);
       myData.append('order_id', order_id);
       myData.append('total_amount', Number(total_amount));
-
+      myData.append('card_id', card.card_id);
       const token = await AsyncStorage.getItem('token');
       const {response, status} = await Service.postAPI(
         API_Endpoints.buy_now,
         myData,
         token,
       );
-
       if (status) {
-        // Toast.show({
-        //   type: 'success',
-        //   text1: response?.message,
-        // });
         setMadePayment(true);
-
         openSuccessfulyPurchasedModal();
       }
     } catch (error) {
@@ -140,51 +131,29 @@ const Billing = ({navigation, dispatch}) => {
     setShowLoader(false);
   };
   const onConfirm = async () => {
-    if (madePayment) {
-      Toast.show({text1: 'You have already made payment'});
+    if (cardList.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please add Card first',
+      });
       return;
-    } else if (card === 0) {
-      Toast.show({text1: 'Please enter card details'});
-      return;
-    } else if (!card?.complete) {
-      Toast.show({text1: 'Please enter a valid card details'});
+    } else if (Object.keys(card).length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please select card first ',
+      });
       return;
     }
     setShowLoader(true);
     try {
-      const res = await createToken({card, type: 'Card'});
-      // return
-      if (res?.error) {
-        if (res?.error?.message) {
-          Toast.show({text1: res?.error?.message});
-          Toast.show({
-            type: 'error',
-            text1: res?.error?.message,
-          });
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: 'Incorrect Card details',
-          });
-        }
-        return;
-      }
-      // const resp = {};
       const token = await AsyncStorage.getItem('token');
       const {response, status} = await Service.postAPI(
         API_Endpoints.save_order,
         '',
         token,
       );
-
       if (status) {
-        handlePayClick(
-          response?.data?.order_id,
-          response?.data?.total_amount,
-          res?.token?.id,
-          res?.token?.card?.id,
-        );
-        getData();
+        handlePayClick(response?.data?.order_id, response?.data?.total_amount);
       } else {
         Toast.show({
           type: 'success',
@@ -193,7 +162,6 @@ const Billing = ({navigation, dispatch}) => {
       }
     } catch (error) {
       console.error('error in onConfirm', error);
-
       setShowLoader(false);
     } finally {
       setShowLoader(false);
@@ -468,7 +436,7 @@ const Billing = ({navigation, dispatch}) => {
               />
             </TouchableOpacity>
           </View>
-          {showCard && (
+          {/* {showCard && (
             <CardField
               postalCodeEnabled={true}
               onCardChange={cardDetails => {
@@ -481,7 +449,8 @@ const Billing = ({navigation, dispatch}) => {
                 borderColor: GREEN,
               }}
             />
-          )}
+          )} */}
+          <View style={{height: 10}} />
           {cardList?.length > 0 ? (
             cardList?.map(item => (
               <TouchableOpacity

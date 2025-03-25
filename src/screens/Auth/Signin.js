@@ -51,8 +51,8 @@ const Signin = () => {
   useEffect(() => {
     if (isFocused) {
       setUserDetails({
-        email: 'Dishant@gmail.com',
-        password: 'Abc@123',
+        email: 'shoaib@gmail.com',
+        password: 'test@123',
       });
       setError({
         email: false,
@@ -157,11 +157,9 @@ const Signin = () => {
       setLoader(false);
     }
   };
-
-  const GoToSignUp = () => {
-    navigation.navigate('SignUp');
+  const goToSignup = () => {
+    navigation.navigate(ScreenNames.SIGN_UP);
   };
-
   const goToForgotPassword = () => {
     navigation.navigate('ForgotPassword');
   };
@@ -212,7 +210,7 @@ const Signin = () => {
           <View style={styles.signupBtnContainerStyle}>
             <Text style={styles.text2}>Don’t Have an Account?</Text>
             <BorderLessButton
-              onPress={GoToSignUp}
+              onPress={goToSignup}
               title=" Sign up"
               style={styles.signupBtnStyle}
               textStyle={styles.signupBtnTextStyle}
