@@ -113,6 +113,7 @@ const CourseFilter = ({
         token,
         paramsData,
       );
+      console.log('qwer', response?.data);
       if (status) {
         const formattedData = response?.data?.map(item => {
           return {
@@ -167,6 +168,7 @@ const CourseFilter = ({
             marginTop={20}
           />
           <CustomDropDown
+            disable={!selectedCategory}
             placeholder="Select Sub Category"
             DD_Data={subCategoriesData}
             value={selectedSubCategory}

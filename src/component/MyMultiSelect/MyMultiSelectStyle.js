@@ -58,11 +58,12 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 0.5,
-    borderColor: '#EFEFEF',
+    // borderColor: '#EFEFEF',
+    borderColor: 'rgba(0,0,0,0.3)',
     borderRadius: 40,
   },
   textSelectedStyle: {
-    marginRight: 5,
+    marginHorizontal: 5,
     // fontSize: 16,
   },
   icon: {

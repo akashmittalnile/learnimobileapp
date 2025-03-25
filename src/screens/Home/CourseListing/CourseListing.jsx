@@ -216,7 +216,7 @@ const CourseListing = ({navigation, route}) => {
                     />
                     <TouchableOpacity onPress={() => removeFilter(key)}>
                       <MyIcon.Ionicons
-                        name="close-circle"
+                        name="close"
                         size={18}
                         color={Colors.WHITE}
                       />
