@@ -138,8 +138,6 @@ const CourseDetail = ({navigation, route}) => {
       const token = await AsyncStorage.getItem('token');
       const endPoint = `${API_Endpoints.course_details}/${id}`;
       const {response, status} = await Service.getAPI(endPoint, token);
-      console.log('response', response);
-
       if (status) {
         setCourseData(response.data);
       }

@@ -1,6 +1,4 @@
 export const BOTTOM_TAB = 'BOTTOM_TAB';
-export const Order = 'Order';
-
 
 export const SPLASH = 'SPLASH';
 export const WELCOME = 'WELCOME';

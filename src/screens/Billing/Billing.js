@@ -15,7 +15,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {CardField, createToken} from '@stripe/stripe-react-native';
 //import : utils
 import {dimensions} from 'global/Constants';
-import {ScreenNames, Service, Colors} from 'global/index';
+import {ScreenNames, Service, Colors, MyIcon} from 'global/index';
 //import : third parties
 import Toast from 'react-native-toast-message';
 //import : global
@@ -38,20 +38,7 @@ const Billing = ({navigation, dispatch}) => {
   const [showSuccessfulyPurchasedModal, setShowSuccessfulyPurchasedModal] =
     useState(false);
   const [selectedCard, setSelectedCard] = useState('');
-  const [cardList, setCardList] = useState([
-    {
-      id: '1',
-      // img: require('assets/images/mastercard.png'),
-      cardNum: '1111 1111 1111 5967',
-      expires: '24/22',
-    },
-    {
-      id: '2',
-      // img: require('assets/images/visa.png'),
-      cardNum: '1111 1111 1111 5967',
-      expires: '24/22',
-    },
-  ]);
+  const [cardList, setCardList] = useState([]);
   const [showAddCardModal, setShowAddCardModal] = useState(false);
   const [screenData, setScreenData] = useState({});
   const [card, setCard] = useState(null);
@@ -72,17 +59,19 @@ const Billing = ({navigation, dispatch}) => {
       setRefreshing(false);
     });
   }, []);
+
+  //function : serv func
   const getData = async () => {
     setShowLoader(true);
     try {
       const token = await AsyncStorage.getItem('token');
-
       const {response, status} = await Service.getAPI(
         API_Endpoints.cart_detail,
         token,
       );
       if (status) {
         setScreenData(response);
+        getCardList();
       } else {
         Toast.show({
           type: 'error',
@@ -95,37 +84,45 @@ const Billing = ({navigation, dispatch}) => {
     setShowLoader(false);
   };
 
-  const resetIndexGoToUserBottomTab = CommonActions.reset({
-    index: 1,
-    routes: [{name: ScreenNames.BOTTOM_TAB}],
-  });
-  const handlePayClick = async (
-    order_id,
-    total_amount,
-    stripeToken,
-    cardID,
-  ) => {
+  const getCardList = async () => {
+    setShowLoader(true);
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const {response, status} = await Service.getAPI(
+        API_Endpoints.card_list,
+        token,
+      );
+      console.log('cart list response', response);
+
+      if (status) {
+        setCardList(response.data);
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: response?.message,
+        });
+      }
+    } catch (error) {
+      console.error('error in getData', error);
+    }
+    setShowLoader(false);
+  };
+  const handlePayClick = async (order_id, total_amount) => {
     setShowLoader(true);
     try {
       const myData = new FormData();
-      myData.append('stripeToken', stripeToken);
+      // myData.append('stripeToken', stripeToken);
       myData.append('order_id', order_id);
       myData.append('total_amount', Number(total_amount));
-
+      myData.append('card_id', card.card_id);
       const token = await AsyncStorage.getItem('token');
       const {response, status} = await Service.postAPI(
         API_Endpoints.buy_now,
         myData,
         token,
       );
-
       if (status) {
-        // Toast.show({
-        //   type: 'success',
-        //   text1: response?.message,
-        // });
         setMadePayment(true);
-
         openSuccessfulyPurchasedModal();
       }
     } catch (error) {
@@ -134,89 +131,41 @@ const Billing = ({navigation, dispatch}) => {
     setShowLoader(false);
   };
   const onConfirm = async () => {
-    if (madePayment) {
-      Toast.show({text1: 'You have already made payment'});
+    if (cardList.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please add Card first',
+      });
       return;
-    } else if (card === 0) {
-      Toast.show({text1: 'Please enter card details'});
-      return;
-    } else if (!card?.complete) {
-      Toast.show({text1: 'Please enter a valid card details'});
+    } else if (Object.keys(card).length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please select card first ',
+      });
       return;
     }
-    const postData = new FormData();
-    // postData.append('card_id', 5);
     setShowLoader(true);
     try {
-      const res = await createToken({card, type: 'Card'});
-      console.log('res', res);
-
-      // return
-      if (res?.error) {
-        if (res?.error?.message) {
-          Toast.show({text1: res?.error?.message});
-          Toast.show({
-            type: 'error',
-            text1: res?.error?.message,
-          });
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: 'Incorrect Card details',
-          });
-        }
-        return;
-      }
-      // const resp = {};
       const token = await AsyncStorage.getItem('token');
       const {response, status} = await Service.postAPI(
         API_Endpoints.save_order,
         '',
         token,
       );
-
       if (status) {
-        handlePayClick(
-          response?.data?.order_id,
-          response?.data?.total_amount,
-          res?.token?.id,
-          res?.token?.card?.id,
-        );
-        getData();
+        handlePayClick(response?.data?.order_id, response?.data?.total_amount);
       } else {
         Toast.show({
           type: 'success',
           text1: response?.message,
         });
       }
-      // if (resp?.data?.status) {
-      //   handlePayClick(
-      //     resp?.data?.order_id,
-      //     resp?.data?.total_amount,
-      //     res?.token?.id,
-      //   );
-      //   // Toast.show({text1: resp.data.message});
-      //   // openSuccessfulyPurchasedModal();
-      //   // navigation.dispatch(resetIndexGoToUserBottomTab);
-      // } else {
-      //   Toast.show({
-      //     text1: resp.data?.message,
-      //   });
-      // }
     } catch (error) {
       console.error('error in onConfirm', error);
-
       setShowLoader(false);
     } finally {
       setShowLoader(false);
     }
-  };
-  const handlePayPress = async () => {
-    if (!card?.complete) {
-      Toast.show('Please enter complete card details');
-      return;
-    }
-    controlLoader(true);
   };
   const openSuccessfulyPurchasedModal = () => {
     setShowSuccessfulyPurchasedModal(true);
@@ -224,27 +173,20 @@ const Billing = ({navigation, dispatch}) => {
   const openAddCardModal = () => {
     setShowAddCardModal(true);
   };
-  // const resetIndexGoToMyOrders = CommonActions.reset({
-  //   index: 1,
-  //   routes: [
-  //     {
-  //       name: ScreenNames.BOTTOM_TAB,
-  //       state: {
-  //         routes: [{name: ScreenNames.MY_ORDERS}],
-  //       },
-  //     },
-  //   ],
-  // });
-
-  const resetIndexGoToMyOrders = () => {
-    navigation.reset({
-      index: 0, 
-      routes: [{ name: ScreenNames.BOTTOM_TAB }],
-    });
-  }
-
+  const resetIndexGoToMyOrders = CommonActions.reset({
+    index: 1,
+    // routes: [{name: ScreenNames.MY_ORDERS}],
+    routes: [
+      {
+        name: ScreenNames.BOTTOM_TAB,
+        state: {
+          routes: [{name: ScreenNames.MY_ORDERS}],
+        },
+      },
+    ],
+  });
   const gotoMyCourses = () => {
-    resetIndexGoToMyOrders()
+    navigation.dispatch(resetIndexGoToMyOrders);
   };
   const changeSelectedCard = id => {
     setSelectedCard(id);
@@ -468,7 +410,8 @@ const Billing = ({navigation, dispatch}) => {
               textColor={'#292D32'}
               style={{}}
             />
-            <View
+            <TouchableOpacity
+              onPress={() => openAddCardModal()}
               style={{
                 width: 75,
                 height: 44,
@@ -491,9 +434,9 @@ const Billing = ({navigation, dispatch}) => {
                 textColor={WHITE}
                 style={{}}
               />
-            </View>
+            </TouchableOpacity>
           </View>
-          {showCard && (
+          {/* {showCard && (
             <CardField
               postalCodeEnabled={true}
               onCardChange={cardDetails => {
@@ -505,47 +448,53 @@ const Billing = ({navigation, dispatch}) => {
                 borderWidth: 0.2,
                 borderColor: GREEN,
               }}
-              cardStyle={{
-                textColor: 'black'
-              }}
             />
-          )}
-          {screenData?.data?.length > 0 ? (
-            screenData?.data?.map(item => (
+          )} */}
+          <View style={{height: 10}} />
+          {cardList?.length > 0 ? (
+            cardList?.map(item => (
               <TouchableOpacity
                 key={item.card_id}
                 onPress={() => {
-                  changeSelectedCard(item.card_id);
+                  setCard(item);
                 }}
-                style={[
-                  styles.cardContainer,
-                  item.card_id === selectedCard
-                    ? {borderWidth: 1, borderColor: Colors.THEME_GOLD}
-                    : null,
-                ]}>
-                <View style={styles.cardContainerLeftRow}>
-                  <View style={{marginLeft: 12}}>
-                    <MyText
-                      text={'**** **** **** ' + item.card_number.slice(-5)}
-                      // text={item.card_number}
-                      fontSize={16}
-                      fontFamily="medium"
-                      textColor={'#261313'}
-                    />
-                    <MyText
-                      text={`Expires ${item.valid_upto}`}
-                      fontSize={14}
-                      fontFamily="light"
-                      textColor={Colors.LIGHT_GREY}
-                    />
+                style={{
+                  ...styles.cardContainer,
+                  borderWidth: 1,
+                  borderColor:
+                    item.card_id === card?.card_id
+                      ? Colors.THEME_GOLD
+                      : Colors.LIGHT_GRAY,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    columnGap: 10,
+                  }}>
+                  <MyIcon.AntDesign name="creditcard" size={25} />
+                  <View style={styles.cardContainerLeftRow}>
+                    <View style={{marginLeft: 12}}>
+                      <MyText
+                        text={'**** **** **** ' + item.last4}
+                        // text={item.card_number}
+                        fontSize={16}
+                        fontFamily="medium"
+                        textColor={'#261313'}
+                      />
+                      <MyText
+                        text={`Expires ${item.exp_month}/${item.exp_year}`}
+                        fontSize={14}
+                        fontFamily="light"
+                        textColor={Colors.LIGHT_GREY}
+                      />
+                    </View>
                   </View>
                 </View>
                 <TouchableOpacity
                   onPress={() => {
                     deleteCard(item.id);
-                  }}>
-                  {/* <Image source={require('assets/images/trash.png')} /> */}
-                </TouchableOpacity>
+                  }}></TouchableOpacity>
               </TouchableOpacity>
             ))
           ) : (
@@ -592,7 +541,7 @@ const Billing = ({navigation, dispatch}) => {
           setVisibility={setShowAddCardModal}
           // setShowLoader={setShowLoader}
           userToken={userToken}
-          callFunctionAfterAddingcard={() => {}}
+          callFunctionAfterAddingcard={() => getData()}
         />
       </ScrollView>
       <Loader visible={showLoader} />

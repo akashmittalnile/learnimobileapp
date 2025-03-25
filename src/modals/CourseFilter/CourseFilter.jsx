@@ -113,7 +113,6 @@ const CourseFilter = ({
         token,
         paramsData,
       );
-      console.log('qwer', response?.data);
       if (status) {
         const formattedData = response?.data?.map(item => {
           return {

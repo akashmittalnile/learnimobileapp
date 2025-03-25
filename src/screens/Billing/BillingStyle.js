@@ -11,13 +11,11 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   summaryContainer: {
-    
     padding: 12,
     paddingRight: 15,
     paddingTop: 15,
     paddingBottom: 22,
     borderRadius: 10,
-  
     backgroundColor: 'white',
     shadowColor: '#000',
     shadowOffset: {
@@ -34,22 +32,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardContainer: {
+    margin: 2,
     backgroundColor: 'white',
-    paddingVertical: 20,
-    paddingHorizontal: 15,
+    padding: 15,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 13,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowRadius: 5,
-    shadowOpacity: 0.05,
-    elevation: 2,
   },
   cardContainerLeftRow: {
     flexDirection: 'row',
