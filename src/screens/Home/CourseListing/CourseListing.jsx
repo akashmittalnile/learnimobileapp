@@ -97,7 +97,6 @@ const CourseListing = ({navigation, route}) => {
       delete newFilters[key];
       return newFilters;
     });
-    console.log('updatedFilters', updatedFilters);
     setTempFilters(updatedFilters);
     getCourses(updatedFilters);
     setIsFilteredAppplied(Object.keys(updatedFilters).length > 0);
