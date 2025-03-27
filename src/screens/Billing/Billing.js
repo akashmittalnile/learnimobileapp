@@ -92,8 +92,6 @@ const Billing = ({navigation, dispatch}) => {
         API_Endpoints.card_list,
         token,
       );
-      console.log('cart list response', response);
-
       if (status) {
         setCardList(response.data);
       } else {

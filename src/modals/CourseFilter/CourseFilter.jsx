@@ -167,6 +167,7 @@ const CourseFilter = ({
             marginTop={20}
           />
           <CustomDropDown
+            disable={!selectedCategory}
             placeholder="Select Sub Category"
             DD_Data={subCategoriesData}
             value={selectedSubCategory}

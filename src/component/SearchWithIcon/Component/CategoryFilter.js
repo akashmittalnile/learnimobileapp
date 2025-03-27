@@ -108,7 +108,7 @@ const TrendingFiltersModal = ({
               }))}
               value={tempSelectedCourseCategries}
               setValue={setTempSelectedCourseCategries}
-              placeholder={'Select Categories'}
+              placeholder={'Select Tags'}
               style={{marginBottom: 0}}
             />
             {/* <Dropdown
@@ -208,7 +208,7 @@ const TrendingFiltersModal = ({
                 alignSelf: 'center',
                 marginTop: 41,
                 marginBottom: 10,
-                backgroundColor: Colors.THEME_GOLD,
+                backgroundColor: Colors.GREEN,
               }}
               onPress={() => applyFilters()}
             />

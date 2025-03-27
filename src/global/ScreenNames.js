@@ -41,6 +41,8 @@ export const COURSE_LISTING = 'COURSE_LISTING';
 
 export const WEB_VIEW_PAGE = 'WEB_VIEW_PAGE';
 
+export const IMAGE_VIEW = 'IMAGE_VIEW';
+
 export const MY_COURSES = 'MY_COURSES';
 
 export const SEARCH = 'SEARCH';
