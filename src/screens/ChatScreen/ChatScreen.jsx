@@ -105,8 +105,6 @@ const ChatScreen = ({route}) => {
   //function : render func
 
   const chatRenderFunction = ({item}) => {
-    console.log('itm', item);
-
     return (
       <>
         {item?.imageUrl ? (
@@ -216,7 +214,7 @@ const ChatScreen = ({route}) => {
         dispatch(setChatCount({chatCount: 0}));
       }
     } catch (err) {
-      console.log('error in getting seen message', err);
+      console.debug('error in getting seen message', err);
     }
   };
 
@@ -226,7 +224,6 @@ const ChatScreen = ({route}) => {
 
   const uploadDocs = async (doc, isPdf = false) => {
     if (!doc) {
-      console.log('No document selected');
       return;
     }
     setLoader(true);
@@ -237,11 +234,9 @@ const ChatScreen = ({route}) => {
       name: `file_${Date.now()}`,
       type: isPdf ? 'pdf' : doc?.mime,
     });
-    console.log('qwer 0', formData);
     try {
       const authToken = await AsyncStorage.getItem('token');
       if (!authToken) {
-        console.log('No auth token found');
         return;
       }
       const response = await axios.post(
@@ -254,12 +249,10 @@ const ChatScreen = ({route}) => {
           },
         },
       );
-      console.log('qwer', response?.data, isPdf);
       if (response?.data?.status) {
         sendMessage(response?.data?.url, isPdf);
       }
     } catch (error) {
-      console.log('Chat file upload error:', error);
     } finally {
       setLoader(false);
     }
@@ -275,7 +268,7 @@ const ChatScreen = ({route}) => {
       handleDocs();
       uploadDocs(image);
     } catch (error) {
-      console.log('Image Picker Error:', error);
+      console.error('Image Picker Error:', error);
     }
   };
 
@@ -288,13 +281,12 @@ const ChatScreen = ({route}) => {
       uploadDocs(res, true);
     } catch (error) {
       if (DocumentPicker.isCancel(error)) {
-        console.log('User cancelled document picker');
+        console.error('User cancelled document picker');
       } else {
-        console.log('Document Picker Error:', error);
+        console.error('Document Picker Error:', error);
       }
     }
   };
-  console.log({loader});
   //UI
   return (
     <>

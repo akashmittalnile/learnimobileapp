@@ -36,6 +36,7 @@ import ImageView from 'screens/ImageView/ImageView';
 import ForgotPassword from 'screens/Auth/ForgotPassword';
 import VerifyCode from 'screens/Auth/VerifyCode';
 import ChangePassword from 'screens/Auth/ChangePassword';
+import NewPassword from 'screens/Profie/NewPassword/NewPassword';
 const AuthStack = () => {
   //variables
   const Stack = createStackNavigator();
@@ -58,6 +59,7 @@ const AuthStack = () => {
         name={ScreenNames.CHANGE_PASSWORD}
         component={ChangePassword}
       />
+      <Stack.Screen name={ScreenNames.NEW_PASSWORD} component={NewPassword} />
       <Stack.Screen name={ScreenNames.BOTTOM_TAB} component={BottomTab} />
       <Stack.Screen name={ScreenNames.EDIT_PROFILE} component={EditProfile} />
       <Stack.Screen name={ScreenNames.COURSE_HISTORY} component={OderHistory} />

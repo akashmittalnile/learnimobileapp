@@ -53,7 +53,6 @@ const SubCategories = ({route, navigation}) => {
         paramsData,
       );
       if (status) {
-        console.log('qwer hit');
         setSubCategoriesData(response.data);
       }
     } catch (error) {

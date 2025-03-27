@@ -8,6 +8,7 @@ export const EDIT_PROFILE = 'EDIT_PROFILE';
 export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
 export const VERIFY_CODE = 'VERIFY_CODE';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+export const NEW_PASSWORD = 'NEW_PASSWORD';
 
 export const COURSE_CATEGORY = 'COURSE_CATEGORY';
 export const SUB_CATEGORY = 'SUB_CATEGORY';

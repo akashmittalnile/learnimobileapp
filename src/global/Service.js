@@ -11,6 +11,7 @@ export const API_Endpoints = {
   forgotPassword: 'forgot-password',
   otpVerification: 'otp-verification',
   resetPassword: 'reset-password',
+  change_password: 'change-password',
   profile: 'profile',
   home: 'home',
   categories: 'categories',
@@ -190,7 +191,7 @@ export const postAPI = async (endPoint, data, token = '') => {
     })
     .catch(err => {
       return {
-        response: String(err?.response?.data).substring(0, 300),
+        response: String(err?.response?.data).substring(0, 700),
         status: false,
       };
     });

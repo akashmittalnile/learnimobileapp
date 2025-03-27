@@ -32,12 +32,17 @@ const Profile = ({navigation}) => {
   const isFocused = useIsFocused();
   //hook : states
   const [profileData, setProfileData] = useState({});
+  console.log('profileData', profileData);
+
   //function : nav func
   const gotoEditProfile = () => {
     navigation.navigate(ScreenNames.EDIT_PROFILE, {data: profileData});
   };
-  const gotoChatScreen = () => {
-    navigation.navigate(ScreenNames.CHAT_SCREEN, {id: profileData.id});
+  const gotoChangePassword = () => {
+    navigation.navigate(ScreenNames.NEW_PASSWORD, {
+      id: profileData.id,
+      email: profileData.email,
+    });
   };
   const gotoNotificationList = () => {
     navigation.navigate(ScreenNames.NOTIFICATION);
@@ -188,6 +193,7 @@ const Profile = ({navigation}) => {
               text={'Change Password'}
               width="48%"
               backgroundColor={Colors.DARK_PURPLE}
+              onPress={() => gotoChangePassword()}
             />
           </View>
           <ProfileItem

@@ -1,6 +1,6 @@
 //import : react component
 import React from 'react';
-import {View, TouchableOpacity, Image} from 'react-native';
+import {View, Share, TouchableOpacity, Image} from 'react-native';
 //import : custom components
 import MyText from 'component/MyText/MyText';
 //import : third party
@@ -19,6 +19,24 @@ import {styles} from './CourseCardStyle';
 //import : redux
 
 const CourseCard = ({item, onPress = () => {}, heartPress = () => {}}) => {
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: 'Learni App',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
   //UI
   return (
     <TouchableOpacity onPress={onPress} style={styles.courseContainer}>
@@ -62,7 +80,7 @@ const CourseCard = ({item, onPress = () => {}, heartPress = () => {}}) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              shareHandler(item?.id);
+              onShare(item?.id);
             }}>
             <MyIcon.AntDesign name="sharealt" size={26} color={Colors.GREEN} />
           </TouchableOpacity>

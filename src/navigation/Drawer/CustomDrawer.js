@@ -37,7 +37,6 @@ const CustomDrawer = ({navigation}) => {
   const isDrawerOpen = useDrawerStatus();
   //hook : states
   const [profileData, setProfileData] = useState({});
-  console.log('profileData', profileData);
 
   useEffect(() => {
     const adminId = 1;
@@ -66,7 +65,7 @@ const CustomDrawer = ({navigation}) => {
         dispatch(setCartCount({chatCount: response?.data?.data}));
       }
     } catch (err) {
-      console.log('getting error in unseen message count', err);
+      console.error('getting error in unseen message count', err);
     }
   };
 
@@ -116,7 +115,6 @@ const CustomDrawer = ({navigation}) => {
         API_Endpoints.profile,
         token,
       );
-      console.log('response', response);
       if (status) {
         setProfileData(response.data);
       }
