@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {View, StyleSheet, ScrollView, Text} from 'react-native';
 import Header from '../../component/Header/Header';
 import BackgroundImage from '../../component/Background/BackgroundImage';
-import PasswordCheck from '../../assests/images/password-check.svg';
+import PasswordCheck from '../../assets/images/password-check.svg';
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -69,7 +69,7 @@ const VerifyCode = () => {
         text1: response?.data?.message,
       });
       if (response?.data?.status) {
-        navigation.navigate('ChangePassword', {
+        navigation.navigate('CHANGE_PASSWORD', {
           email: params?.email,
           otp,
         });
@@ -122,12 +122,16 @@ const VerifyCode = () => {
           blurOnFilled={true}
           disabled={false}
           type="numeric"
-          secureTextEntry={true}
+          secureTextEntry={false}
           focusStickBlinkingDuration={500}
           onTextChange={onChangeotp}
+          
           theme={{
             containerStyle: styles.OtpContainer,
             pinCodeContainerStyle: styles.pinCodeContainerStyle,
+            pinCodeTextStyle: {
+              color: 'black',
+            }
           }}
         />
 

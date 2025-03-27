@@ -9,6 +9,7 @@ import Splash from 'screens/Splash/Splash';
 import Welcome from 'screens/Welcome/Welcome';
 import SignUp from 'screens/Auth/SignUp';
 import Signin from 'screens/Auth/Signin';
+import ForgotPassword from 'screens/Auth/ForgotPassword';
 import BottomTab from './BottomTab/BottomTab';
 import EditProfile from 'screens/Profie/EditProfile/EditProfile';
 import CourseCategory from 'screens/CourseCategory/CourseCategory';
@@ -32,6 +33,9 @@ import CourseListing from 'screens/Home/CourseListing/CourseListing';
 import WebViewPage from 'screens/Home/WebViewPage/WebViewPage';
 import MyCourses from 'screens/Home/MyCourses/MyCourses';
 import Search from 'screens/Search/Search';
+import VerifyCode from 'screens/Auth/VerifyCode';
+import ChangePassword from 'screens/Auth/ChangePassword';
+
 const AuthStack = () => {
   //variables
   const Stack = createStackNavigator();
@@ -44,6 +48,9 @@ const AuthStack = () => {
       <Stack.Screen name={ScreenNames.SPLASH} component={Splash} />
       <Stack.Screen name={ScreenNames.WELCOME} component={Welcome} />
       <Stack.Screen name={ScreenNames.SIGN_IN} component={Signin} />
+      <Stack.Screen name={ScreenNames.FORGOT_PASSWORD} component={ForgotPassword} />
+      <Stack.Screen name={ScreenNames.VERIFY_CODE} component={VerifyCode} />
+      <Stack.Screen name={ScreenNames.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen name={ScreenNames.SIGN_UP} component={SignUp} />
       <Stack.Screen name={ScreenNames.BOTTOM_TAB} component={BottomTab} />
       <Stack.Screen name={ScreenNames.EDIT_PROFILE} component={EditProfile} />
