@@ -47,12 +47,13 @@ import SearchWithIcon from 'component/SearchWithIcon/SearchWithIcon';
 import Background from 'assets/svgs/background.svg';
 import TrendingFiltersModal from 'component/SearchWithIcon/Component/CategoryFilter';
 import VideoModal from 'component/VideoModal/VideoModal';
-import Cross from 'assets/images/closecircle.svg';
+import Cross from 'assets/images/cross-white.svg';
 // import { shareItemHandler } from '../../../global/globalMethod';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
 import {dimensions} from 'global/Constants';
 import CourseDetailLoader from 'component/SkeltonLoader/CourseDetailLoader';
 import NoDataFound from 'component/NoDataFound/NoDataFound';
+import {MEDIUM} from 'global/Fonts';
 // import defaultImg from 'assets/images/profilePerson.svg';
 
 let timeoutId;
@@ -271,26 +272,36 @@ const CourseList = ({navigation, dispatch, route}) => {
   const ShowSelectedFilters = () => {
     return (
       <View
-        style={{flexWrap: 'wrap', flexDirection: 'row', paddingVertical: 10}}>
+        style={{
+          flexWrap: 'wrap',
+          flexDirection: 'row',
+          paddingVertical: 10,
+          width: '90%',
+          alignSelf: 'center',
+        }}>
         {selectedCourseCategries?.length > 0 ? (
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               flexWrap: 'wrap',
-              backgroundColor: '#ede5ca',
-              marginRight: 'auto',
-              paddingHorizontal: 10,
-              paddingVertical: 5,
+              // backgroundColor: '#ede5ca',
+              marginRight: 5,
               borderRadius: 10,
               marginTop: 10,
             }}>
             <MyText
-              text={'Categorie(s): '}
-              fontFamily="regular"
+              text={'Tag(s): '}
+              fontFamily={MEDIUM}
               fontSize={13}
-              textColor={Colors.THEME_BROWN}
-              style={{}}
+              textColor={Colors.WHITE}
+              style={{
+                marginRight: 5,
+                backgroundColor: Colors.DARK_PURPLE,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 10,
+              }}
             />
             {selectedCourseCategries?.map((el, index) => (
               <View
@@ -298,13 +309,17 @@ const CourseList = ({navigation, dispatch, route}) => {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginRight: 10,
+                  marginRight: 5,
+                  backgroundColor: Colors.DARK_PURPLE,
+                  paddingHorizontal: 10,
+                  paddingVertical: 5,
+                  borderRadius: 10,
                 }}>
                 <MyText
                   text={el}
-                  fontFamily="regular"
+                  fontFamily={MEDIUM}
                   fontSize={13}
-                  textColor={Colors.THEME_BROWN}
+                  textColor={Colors.WHITE}
                 />
                 <TouchableOpacity
                   onPress={() => removeFilter('cat', el)}
@@ -312,7 +327,7 @@ const CourseList = ({navigation, dispatch, route}) => {
                     marginLeft: 5,
                     marginTop: 3,
                   }}>
-                  <Cross></Cross>
+                 <Cross fill="white" height={15} width={15} />
                   {/* <Image
                     source={require('assets/images/trash.png')}
                     style={{ height: 16, width: 16 }}
@@ -327,7 +342,7 @@ const CourseList = ({navigation, dispatch, route}) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              backgroundColor: '#ede5ca',
+              backgroundColor: Colors.DARK_PURPLE,
               marginRight: 'auto',
               marginTop: 10,
               paddingHorizontal: 10,
@@ -336,9 +351,9 @@ const CourseList = ({navigation, dispatch, route}) => {
             }}>
             <MyText
               text={'Price: '}
-              fontFamily="regular"
+              fontFamily={MEDIUM}
               fontSize={13}
-              textColor={Colors.THEME_BROWN}
+              textColor={Colors.WHITE}
               style={{}}
             />
             <MyText
@@ -346,9 +361,9 @@ const CourseList = ({navigation, dispatch, route}) => {
                 priceFilterValues?.find(el => el.id === selectedPriceFilter)
                   ?.name
               }
-              fontFamily="regular"
+              fontFamily={MEDIUM}
               fontSize={13}
-              textColor={Colors.THEME_BROWN}
+              textColor={Colors.WHITE}
             />
             <TouchableOpacity
               onPress={() => removeFilter('price', selectedPriceFilter)}
@@ -356,7 +371,7 @@ const CourseList = ({navigation, dispatch, route}) => {
                 marginLeft: 5,
                 marginTop: 3,
               }}>
-              <Cross></Cross>
+                 <Cross fill="white" height={15} width={15} />
               {/* <Image
                 source={require('assets/images/trash.png')}
                 style={{ height: 16, width: 16 }}
@@ -370,7 +385,7 @@ const CourseList = ({navigation, dispatch, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               flexWrap: 'wrap',
-              backgroundColor: '#ede5ca',
+              backgroundColor: Colors.DARK_PURPLE,
               marginRight: 'auto',
               marginTop: 10,
               paddingHorizontal: 10,
@@ -379,9 +394,9 @@ const CourseList = ({navigation, dispatch, route}) => {
             }}>
             <MyText
               text={'Rating: '}
-              fontFamily="regular"
+              fontFamily={MEDIUM}
               fontSize={13}
-              textColor={Colors.THEME_BROWN}
+              textColor={Colors.WHITE}
               style={{}}
             />
             {selectedRatingValues?.map((el, index) => (
@@ -395,9 +410,9 @@ const CourseList = ({navigation, dispatch, route}) => {
                 <MyText
                   key={el}
                   text={`${el} and more`}
-                  fontFamily="regular"
+                  fontFamily={MEDIUM}
                   fontSize={13}
-                  textColor={Colors.THEME_BROWN}
+                  textColor={Colors.WHITE}
                 />
                 <TouchableOpacity
                   onPress={() => removeFilter('rating', el)}
@@ -409,7 +424,7 @@ const CourseList = ({navigation, dispatch, route}) => {
                     source={require('assets/images/trash.png')}
                     style={{ height: 16, width: 16 }}
                   /> */}
-                  <Cross></Cross>
+                    <Cross fill="white" height={15} width={15} />
                 </TouchableOpacity>
               </View>
             ))}
@@ -758,7 +773,7 @@ const CourseList = ({navigation, dispatch, route}) => {
           type: 'success',
           text1: response?.message,
         });
-        getCourses()
+        getCourses();
       }
     } catch (err) {
       console.error('error in registering user', err);

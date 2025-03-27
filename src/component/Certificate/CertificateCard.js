@@ -88,7 +88,7 @@ const CertificateCard = ({
                   fontSize={13}
                   textColor={'#000000'}
                   letterSpacing={0.13}
-                  style={{marginLeft: 7}}
+                  style={{marginLeft: 7, width: responsiveWidth(25)}}
                 />
               </View>
               <View style={styles.ratingRow}>

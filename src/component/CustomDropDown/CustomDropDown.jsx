@@ -8,14 +8,20 @@ const CustomDropDown = ({
   setValue = () => {},
   onFocus = () => {},
   placeholder = 'Select item',
+  disable = false,
 }) => {
   //hook : states
   const [isFocus, setIsFocus] = useState(false);
 
   //UI
   return (
-    <View>
+    <View
+      style={{
+        backgroundColor: disable ? 'rgba(0,0,0,0.15)' : 'white',
+        borderRadius: 8,
+      }}>
       <Dropdown
+        disable={disable}
         style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
