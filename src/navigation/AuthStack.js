@@ -9,7 +9,6 @@ import Splash from 'screens/Splash/Splash';
 import Welcome from 'screens/Welcome/Welcome';
 import SignUp from 'screens/Auth/SignUp';
 import Signin from 'screens/Auth/Signin';
-import ForgotPassword from 'screens/Auth/ForgotPassword';
 import BottomTab from './BottomTab/BottomTab';
 import EditProfile from 'screens/Profie/EditProfile/EditProfile';
 import CourseCategory from 'screens/CourseCategory/CourseCategory';
