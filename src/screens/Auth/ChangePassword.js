@@ -2,13 +2,13 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, ScrollView, Text} from 'react-native';
 import Header from '../../component/Header/Header';
 import BackgroundImage from '../../component/Background/BackgroundImage';
-import LockLogo from '../../assests/images/lock1.svg';
+import LockLogo from '../../assets/images/lock1.svg';
 import {
   responsiveFontSize,
   responsiveHeight,
 } from 'react-native-responsive-dimensions';
 import CustomPasswordInput from '../../component/TextInput/CustomPasswordInput';
-import Lock from '../../assests/images/lock.svg';
+import Lock from '../../assets/images/lock.svg';
 import BorderButton from '../../component/MyButton/BorderButton';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import Loader from '../../component/loader/Loader';
@@ -81,7 +81,7 @@ const ChangePassword = () => {
         text1: response?.data?.message,
       });
       if (response?.data?.status) {
-        navigation.navigate('SignIn');
+        navigation.navigate('SIGN_IN');
       }
     } catch (err) {
     } finally {
