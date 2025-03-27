@@ -50,7 +50,6 @@ const AddCard = ({
         postData,
         token,
       );
-      console.log('response', response);
 
       if (status) {
         Toast.show({
@@ -63,7 +62,6 @@ const AddCard = ({
         Toast.show({text1: response?.message});
       }
     } catch (error) {
-      console.log('error in onAddCard', error);
     } finally {
       setShowLoader(false);
     }

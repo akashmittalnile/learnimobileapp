@@ -161,7 +161,7 @@ const Signin = () => {
     navigation.navigate(ScreenNames.SIGN_UP);
   };
   const goToForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+    navigation.navigate('FORGOT_PASSWORD');
   };
 
   return (

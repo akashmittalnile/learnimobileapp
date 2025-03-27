@@ -97,7 +97,6 @@ const CourseListing = ({navigation, route}) => {
       delete newFilters[key];
       return newFilters;
     });
-    console.log('updatedFilters', updatedFilters);
     setTempFilters(updatedFilters);
     getCourses(updatedFilters);
     setIsFilteredAppplied(Object.keys(updatedFilters).length > 0);
@@ -216,7 +215,7 @@ const CourseListing = ({navigation, route}) => {
                     />
                     <TouchableOpacity onPress={() => removeFilter(key)}>
                       <MyIcon.Ionicons
-                        name="close-circle"
+                        name="close"
                         size={18}
                         color={Colors.WHITE}
                       />

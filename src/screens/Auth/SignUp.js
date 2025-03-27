@@ -176,7 +176,7 @@ const SignUp = ({navigation}) => {
   };
 
   const goToSignIn = () => {
-    navigation.navigate('SignIn');
+    navigation.navigate('SIGN_IN');
     showSuccessModal && setShowSuccessModal(false);
   };
 

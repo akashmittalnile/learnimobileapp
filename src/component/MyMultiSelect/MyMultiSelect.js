@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   Platform,
@@ -14,10 +14,12 @@ import MyText from 'component/MyText/MyText';
 import {styles} from './MyMultiSelectStyle';
 import {AntDesign} from 'global/MyIcon';
 import Toast from 'react-native-toast-message';
+import Cross from 'assets/images/closecircle.svg';
 
 import {MultiSelect} from 'react-native-element-dropdown';
 
 const MyMultiSelect = ({value, setValue, data, placeholder, style = {}}) => {
+  const dropdownRef = useRef(null);
   const [isFocus, setIsFocus] = useState(false);
   const renderItem = item => {
     return (
@@ -35,6 +37,7 @@ const MyMultiSelect = ({value, setValue, data, placeholder, style = {}}) => {
   };
   return (
     <MultiSelect
+      ref={dropdownRef}
       style={[styles.dropdown, style]}
       placeholderStyle={styles.placeholderStyle}
       selectedTextStyle={styles.selectedTextStyle}
@@ -59,11 +62,13 @@ const MyMultiSelect = ({value, setValue, data, placeholder, style = {}}) => {
       onChange={items => {
         setValue(Array.isArray(items) ? items : [items]); // Ensure it's an array
         setIsFocus(false);
+        dropdownRef.current?.close();
       }}
       renderItem={renderItem}
       renderSelectedItem={(item, unSelect) => (
         <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
           <View style={styles.selectedStyle}>
+            <Cross />
             <MyText
               text={
                 typeof item.label === 'string'

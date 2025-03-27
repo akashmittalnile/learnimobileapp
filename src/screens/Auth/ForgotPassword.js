@@ -2,13 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, ScrollView, Text} from 'react-native';
 import Header from '../../component/Header/Header';
 import BackgroundImage from '../../component/Background/BackgroundImage';
-import EmailLogo from '../../assests/images/sms-notification.svg';
+import EmailLogo from '../../assets/images/sms-notification.svg';
 import {
   responsiveFontSize,
   responsiveHeight,
 } from 'react-native-responsive-dimensions';
 import CustomTextInput from '../../component/TextInput/CustomTextInput';
-import _EmailLogo from '../../assests/images/sms.svg';
+import _EmailLogo from '../../assets/images/sms.svg';
 import BorderButton from '../../component/MyButton/BorderButton';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import Loader from '../../component/loader/Loader';
@@ -49,7 +49,7 @@ const ForgotPassword = () => {
         text1: response?.data?.message,
       });
       if (response?.data?.status) {
-        navigation?.navigate('VerifyCode', {
+        navigation?.navigate('VERIFY_CODE', {
           email,
           otp: response?.data?.data?.otp,
         });

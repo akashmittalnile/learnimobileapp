@@ -5,6 +5,9 @@ export const WELCOME = 'WELCOME';
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
 export const EDIT_PROFILE = 'EDIT_PROFILE';
+export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
+export const VERIFY_CODE = 'VERIFY_CODE';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 
 export const COURSE_CATEGORY = 'COURSE_CATEGORY';
 export const SUB_CATEGORY = 'SUB_CATEGORY';
@@ -37,6 +40,8 @@ export const CHAT_SCREEN = 'CHAT_SCREEN';
 export const COURSE_LISTING = 'COURSE_LISTING';
 
 export const WEB_VIEW_PAGE = 'WEB_VIEW_PAGE';
+
+export const IMAGE_VIEW = 'IMAGE_VIEW';
 
 export const MY_COURSES = 'MY_COURSES';
 
