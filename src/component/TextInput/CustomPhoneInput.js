@@ -41,7 +41,7 @@ const CustomPhoneInput = ({
   const onChangeTextHandler = value => {
     onChangeNumber && onChangeNumber(value);
   };
-
+console.log({cca2})
   return (
     <View style={[styles.container, style]}>
       <View style={[styles.countryCode]}>

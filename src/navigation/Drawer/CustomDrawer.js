@@ -1,6 +1,12 @@
 //import : react components
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  NativeModules,
+} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {useDrawerStatus} from '@react-navigation/drawer';
 //import : custom components
@@ -29,7 +35,8 @@ import {styles} from './CustomDrawerStyle';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
 import {setCartCount} from 'reduxTooklit/CountSlice';
-
+import { responsiveWidth } from 'react-native-responsive-dimensions';
+const {StatusBarManager} = NativeModules;
 const CustomDrawer = ({navigation}) => {
   //variables
   const dispatch = useDispatch();
@@ -37,6 +44,7 @@ const CustomDrawer = ({navigation}) => {
   const isDrawerOpen = useDrawerStatus();
   //hook : states
   const [profileData, setProfileData] = useState({});
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
 
   useEffect(() => {
     const adminId = 1;
@@ -53,6 +61,16 @@ const CustomDrawer = ({navigation}) => {
     });
     return () => unSubscribe();
   }, [profileData?.id]);
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      StatusBarManager.getHeight(({height}) => {
+        setStatusBarHeight(height);
+      });
+    } else {
+      setStatusBarHeight(StatusBarManager.HEIGHT);
+    }
+  }, []);
 
   const getUnseenMessageCount = async () => {
     try {
@@ -132,7 +150,7 @@ const CustomDrawer = ({navigation}) => {
   //UI
   return (
     <View style={styles.container}>
-      <View style={styles.logoStyle}>
+      <View style={{...styles.logoStyle, marginTop: statusBarHeight}}>
         <Logo height={59}></Logo>
       </View>
       <ScrollView>
@@ -193,7 +211,11 @@ const CustomDrawer = ({navigation}) => {
                 fontFamily={BOLD}
                 textColor="white"
               />
-              <MyText text={profileData.email} textColor="white" />
+              <MyText
+                text={profileData.email}
+                textColor="white"
+                style={{maxWidth: responsiveWidth(45)}}
+              />
             </View>
           </View>
 

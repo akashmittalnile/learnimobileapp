@@ -9,7 +9,7 @@ export const API_Endpoints = {
   register: 'register',
   logout: 'logout',
   forgotPassword: 'forgot-password',
-  otpVerification: 'otp-verification',
+  otpVerification: 'otp-verfication',
   resetPassword: 'reset-password',
   change_password: 'change-password',
   profile: 'profile',

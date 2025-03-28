@@ -17,13 +17,14 @@ import Calendar from 'assets/images/calendar.svg';
 import Clock from 'assets/images/clockGreen.svg';
 import TaskSvg from 'assets/svgs/task-square.svg';
 import NotFavSvg from 'assets/svgs/note-favorite.svg';
-import {BLACK, REGULAR} from 'global/Fonts';
+import {BLACK, REGULAR, SEMI_BOLD} from 'global/Fonts';
 import {API_Endpoints} from 'global/Service';
 import {Colors, MyIcon, ScreenNames, Service} from 'global/index';
 //import : styles
 import {styles} from './ChapterDetailStyle';
 //import : modals
 import QuizResult from 'modals/QuizResult/QuizResult';
+import SuccessfulyPurchased from 'modals/SuccessfulyPurchased.js/SuccessfulyPurchased';
 //import : redux
 
 const ChapterDetail = ({route, navigation}) => {
@@ -37,6 +38,7 @@ const ChapterDetail = ({route, navigation}) => {
   const [showAppLoader, setShowAppLoader] = useState(false);
   //hook : modal states
   const [showQuizResult, setShowQuizResult] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   //function : nav func
   const gotoWebViewPage = url => {
     navigation.navigate(ScreenNames.WEB_VIEW_PAGE, {
@@ -53,6 +55,10 @@ const ChapterDetail = ({route, navigation}) => {
     }
   };
   const openSurvey = item => {
+    if (!item?.survey_url) {
+      setShowSuccessModal(true);
+      return;
+    }
     navigation.navigate(ScreenNames.WEB_VIEW_PAGE, {
       url: item.survey_url,
       data: data,
@@ -118,39 +124,41 @@ const ChapterDetail = ({route, navigation}) => {
 
     return () => {};
   }, [isFocused]);
-
+  console.log('qwer', selectedItem);
   //UI
   return (
-    <View style={styles.container}>
-      <Header
-        showBackButton={true}
-        heading={chapterData.lesson_name}
-        showNotification={false}
-        showCart={false}
-        showLearneLogo={false}
-        showGridIcon={false}
-      />
-      <ScrollView>
-        {Object.keys(selectedItem).length > 0 && (
-          <ChapterContent
-            course_img={chapterData.image}
-            url={selectedItem?.file}
-            type={selectedItem?.type}
-            item={selectedItem}
-            quizPress={() => openQuiz(selectedItem)}
-            surveyPress={() => openSurvey(selectedItem)}
-          />
-        )}
+    <>
+      <View style={styles.container}>
+        <Header
+          showBackButton={true}
+          heading={chapterData.lesson_name}
+          showNotification={false}
+          showCart={false}
+          showLearneLogo={false}
+          showGridIcon={false}
+        />
 
-        <View style={styles.mainView}>
-          <MyText
-            text={selectedItem.title}
-            fontFamily={BLACK}
-            fontSize={20}
-            textColor={'black'}
-            style={{width: '95%'}}
-          />
-          {/* <View
+        <ScrollView>
+          {Object.keys(selectedItem).length > 0 && (
+            <ChapterContent
+              course_img={chapterData.image}
+              url={selectedItem?.file}
+              type={selectedItem?.type}
+              item={selectedItem}
+              quizPress={() => openQuiz(selectedItem)}
+              surveyPress={() => openSurvey(selectedItem)}
+            />
+          )}
+
+          <View style={styles.mainView}>
+            <MyText
+              text={selectedItem.title}
+              fontFamily={SEMI_BOLD}
+              fontSize={20}
+              textColor={'black'}
+              style={{width: '95%'}}
+            />
+            {/* <View
             style={{
               flexDirection: 'row',
               columnGap: 20,
@@ -174,7 +182,7 @@ const ChapterDetail = ({route, navigation}) => {
               />
             </View>
           </View> */}
-          {/* <View
+            {/* <View
             style={{
               flexDirection: 'row',
               marginTop: 10,
@@ -199,65 +207,80 @@ const ChapterDetail = ({route, navigation}) => {
               />
             </View>
           </View> */}
-          <MyText
-            text={selectedItem?.description}
-            fontFamily={REGULAR}
-            fontSize={14}
-            textColor={'black'}
-            style={{width: '95%'}}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginVertical: 10,
-            }}>
-            <MyButton
-              text={'Mark as complete'}
-              width="48%"
-              disabled={!selectedItem?.showMarkCompleteBtn}
-              backgroundColor={
-                selectedItem?.showMarkCompleteBtn
-                  ? Colors.GREEN
-                  : Colors.LIGHT_GREY
-              }
-              onPress={() => markAsComplete()}
+            <MyText
+              text={selectedItem?.description}
+              fontFamily={REGULAR}
+              fontSize={14}
+              textColor={'black'}
+              style={{marginVertical: 8, width: '95%'}}
             />
-            <MyButton
-              text={'Continue'}
-              width="48%"
-              backgroundColor={Colors.DARK_PURPLE}
-              onPress={() => handleContinuePress()}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 10,
+                marginVertical: 20,
+              }}>
+              <MyButton
+                text={
+                  selectedItem?.is_completed == '1'
+                    ? 'Mark Incomplete'
+                    : 'Mark Complete'
+                }
+                width="48%"
+                disabled={!selectedItem?.showMarkCompleteBtn}
+                backgroundColor={
+                  selectedItem?.showMarkCompleteBtn
+                    ? Colors.GREEN
+                    : Colors.LIGHT_GREY
+                }
+                onPress={() => markAsComplete()}
+              />
+              <MyButton
+                text={'Continue'}
+                width="48%"
+                backgroundColor={Colors.DARK_PURPLE}
+                onPress={() => handleContinuePress()}
+              />
+            </View>
+            <FlatList
+              data={chapterData?.chapter_steps}
+              renderItem={({item, index}) => {
+                return (
+                  <ChapterTask
+                    icon={item.image}
+                    title={item.title}
+                    item={item}
+                    isSelected={item.title == selectedItem.title}
+                    onPress={() => setSelectedItem(item)}
+                  />
+                );
+              }}
+              keyExtractor={(item, index) => index + item}
             />
           </View>
-          <FlatList
-            data={chapterData?.chapter_steps}
-            renderItem={({item, index}) => {
-              return (
-                <ChapterTask
-                  icon={item.image}
-                  title={item.title}
-                  item={item}
-                  isSelected={item.title == selectedItem.title}
-                  onPress={() => setSelectedItem(item)}
-                />
-              );
-            }}
-            keyExtractor={(item, index) => index + item}
-          />
-        </View>
-      </ScrollView>
-      <Loader visible={showAppLoader} />
-      <QuizResult
-        visible={showQuizResult}
-        setVisibility={setShowQuizResult}
-        data={quizInfo.current}
-        nextFunction={() => {
-          gotoWebViewPage(selectedItem.quiz_url);
+        </ScrollView>
+        <Loader visible={showAppLoader} />
+        <QuizResult
+          visible={showQuizResult}
+          setVisibility={setShowQuizResult}
+          data={quizInfo.current}
+          nextFunction={() => {
+            gotoWebViewPage(selectedItem.quiz_url);
+          }}
+        />
+      </View>
+      <SuccessfulyPurchased
+        title="Survey Submitted!"
+        description={"It looks like you've already submitted the survey"}
+        visible={showSuccessModal}
+        buttonText="OK"
+        onPress={() => {
+          setShowSuccessModal(false);
         }}
       />
-    </View>
+    </>
   );
 };
 
@@ -297,12 +320,13 @@ const ChapterTask = ({icon, item, isSelected, title, onPress = () => {}}) => {
           fontFamily={BLACK}
           fontSize={14}
           textColor={'black'}
+          style={{width: '75%'}}
         />
       </View>
       {item.is_completed == '1' && (
         <MyIcon.MaterialCommunityIcons
           name="check-decagram-outline"
-          size={28}
+          size={25}
           color={Colors.GREEN}
         />
       )}

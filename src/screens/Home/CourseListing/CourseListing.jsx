@@ -24,7 +24,7 @@ import {debounce} from 'lodash';
 //import : utils
 import Background from 'assets/svgs/background.svg';
 import {API_Endpoints} from 'global/Service';
-import {Colors, MyIcon, Service} from 'global/index';
+import {Colors, MyIcon, ScreenNames, Service} from 'global/index';
 //import : styles
 import {styles} from './CourseListingStyle';
 //import : modals
@@ -157,6 +157,10 @@ const CourseListing = ({navigation, route}) => {
     initLoader();
     return () => debouncedSearch.cancel();
   }, [isFocused]);
+
+   const gotoCourseDetails = id => {
+      navigation.navigate(ScreenNames.COURSE_DETAIL, {id});
+    };
 
   //UI
   if (showBaseLoader) {
