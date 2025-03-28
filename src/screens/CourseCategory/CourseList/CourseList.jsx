@@ -33,7 +33,7 @@ import {Colors} from 'global/index';
 import {styles} from '../CourseCategoryStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScreenNames, Service} from 'global/index';
-import {API_Endpoints} from 'global/Service';
+import {API_Endpoints, baseURL, PostApiWithToken} from 'global/Service';
 import CourseCard from 'component/CourseCard/CourseCard';
 import FilterIcon from 'assets/images/settingFilter.svg';
 
@@ -58,6 +58,7 @@ import {MEDIUM} from 'global/Fonts';
 
 let timeoutId;
 let count = 0;
+let paramsData = {};
 const CourseList = ({navigation, dispatch, route}) => {
   const {data} = route.params;
   // const defaultImgPath = Image.resolveAssetSource(defaultImg).uri;
@@ -121,6 +122,10 @@ const CourseList = ({navigation, dispatch, route}) => {
     );
   };
   const initLoader = async () => {
+    paramsData = {
+      name: '',
+      sub_category_id: data.id,
+    };
     setShowLoader(true);
     await getCourses();
     await courseCategories();
@@ -203,13 +208,14 @@ const CourseList = ({navigation, dispatch, route}) => {
       setRefreshing(false);
     });
   }, []);
-  let paramsData = {}; // Global variable to store filter params
+  // let paramsData = {}; // Global variable to store filter params
   const getCourses = async (searchedName = '') => {
     try {
       paramsData = {
         ...paramsData,
         name: searchedName,
         sub_category_id: data.id,
+        trending: true
       };
       const token = await AsyncStorage.getItem('token');
 
@@ -327,7 +333,7 @@ const CourseList = ({navigation, dispatch, route}) => {
                     marginLeft: 5,
                     marginTop: 3,
                   }}>
-                 <Cross fill="white" height={15} width={15} />
+                  <Cross fill="white" height={15} width={15} />
                   {/* <Image
                     source={require('assets/images/trash.png')}
                     style={{ height: 16, width: 16 }}
@@ -371,7 +377,7 @@ const CourseList = ({navigation, dispatch, route}) => {
                 marginLeft: 5,
                 marginTop: 3,
               }}>
-                 <Cross fill="white" height={15} width={15} />
+              <Cross fill="white" height={15} width={15} />
               {/* <Image
                 source={require('assets/images/trash.png')}
                 style={{ height: 16, width: 16 }}
@@ -424,7 +430,7 @@ const CourseList = ({navigation, dispatch, route}) => {
                     source={require('assets/images/trash.png')}
                     style={{ height: 16, width: 16 }}
                   /> */}
-                    <Cross fill="white" height={15} width={15} />
+                  <Cross fill="white" height={15} width={15} />
                 </TouchableOpacity>
               </View>
             ))}
@@ -652,7 +658,7 @@ const CourseList = ({navigation, dispatch, route}) => {
       setSelectedRatingValues(remainingselectedRatingValues);
       setTempSelectedRatingValues(remainingselectedRatingValues);
     }
-    selectedRatingValues;
+    // selectedRatingValues;
     // priceFilterValues?.find(el => el.id === selectedPriceFilter);
     const postData = new FormData();
     let catIds = [];
@@ -672,10 +678,15 @@ const CourseList = ({navigation, dispatch, route}) => {
     postData.append('limit', 10);
     setShowLoader(true);
     try {
-      const resp = await Service.postApiWithToken(
-        userToken,
-        `trending-course`,
+      const resp = await axios.post(
+        `${baseURL}trending-course`,
         postData?._parts?.length === 0 ? {} : postData,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        },
       );
       if (resp?.data?.status == true) {
         setShowFilterModal(false);

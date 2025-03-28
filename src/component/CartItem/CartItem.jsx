@@ -11,6 +11,7 @@ import Rating from 'assets/images/rating.svg';
 import {Colors, MyIcon} from 'global/index';
 //import : styles
 import {styles} from './CartItemStyle';
+import FastImage from 'react-native-fast-image';
 //import : modals
 //import : redux
 
@@ -21,12 +22,16 @@ const CartItem = ({item, onPressDeleteButtonHandler}) => {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{uri: item.image}}
+      <FastImage
+        source={{uri: item.image, priority: FastImage.priority.high}}
         style={{
           height: dimensions.SCREEN_WIDTH / 3,
           width: dimensions.SCREEN_WIDTH / 3,
+          borderWidth: 1, 
+          borderColor: 'rgba(0,0,0,0.1)',
+          borderRadius: 10
         }}
+        resizeMode={FastImage.resizeMode.cover}
       />
       <View style={{width: '55%'}}>
         <MyText text={item.name} fontFamily={MEDIUM} />

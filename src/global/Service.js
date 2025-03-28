@@ -47,6 +47,7 @@ export const API_Endpoints = {
   certificates: 'certificates',
   unseenMessageCount: 'unseen-message-count',
   seenMessage: 'seen-message',
+  chatRecord: 'chat-record'
 };
 
 //function : imp function

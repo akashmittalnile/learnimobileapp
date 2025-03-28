@@ -8,10 +8,11 @@ import {
   Modal,
   RefreshControl,
   PermissionsAndroid,
-  Platform
+  Platform,
+  Text,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
 //import : components
 import Header from 'component/Header/Header';
 import MyText from 'component/MyText/MyText';
@@ -19,7 +20,7 @@ import MyButton from 'component/MyButton/MyButton';
 //import : third parties
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import : utils
-import { Colors, MyIcon, ScreenNames, Service } from 'global/index';
+import {Colors, Fonts, MyIcon, ScreenNames, Service} from 'global/index';
 import CallSvg from 'assets/svgs/call.svg';
 import SmsSvg from 'assets/svgs/sms.svg';
 import BagSvg from 'assets/svgs/shopping-bag.svg';
@@ -28,14 +29,16 @@ import NotiSvg from 'assets/svgs/notification-bing.svg';
 import DollarSvg from 'assets/svgs/dollar-circle.svg';
 import HeartSvg from 'assets/svgs/heart.svg';
 import RightSvg from 'assets/svgs/right-arrow.svg';
-import { API_Endpoints } from 'global/Service';
-import { MEDIUM, SEMI_BOLD } from 'global/Fonts';
+import {API_Endpoints} from 'global/Service';
+import {MEDIUM, REGULAR, SEMI_BOLD} from 'global/Fonts';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import NewIcon from 'react-native-vector-icons/MaterialIcons';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 import Loader from 'component/loader/Loader';
+import {responsiveFontSize, responsiveHeight} from 'react-native-responsive-dimensions';
 
-const Profile = ({ navigation }) => {
+const Profile = ({navigation}) => {
   //variables
   const isFocused = useIsFocused();
   //hook : states
@@ -46,16 +49,16 @@ const Profile = ({ navigation }) => {
   const [showLoader, setShowLoader] = useState(false);
   //function : nav func
   const gotoEditProfile = () => {
-    navigation.navigate(ScreenNames.EDIT_PROFILE, { data: profileData });
+    navigation.navigate(ScreenNames.EDIT_PROFILE, {data: profileData});
   };
   const gotoChangePassword = () => {
     navigation.navigate(ScreenNames.NEW_PASSWORD, {
       id: profileData.id,
       email: profileData.email,
     });
-  }
+  };
   const gotoChatScreen = () => {
-    navigation.navigate(ScreenNames.CHAT_SCREEN, { id: profileData.id });
+    navigation.navigate(ScreenNames.CHAT_SCREEN, {id: profileData.id});
   };
   const gotoNotificationList = () => {
     navigation.navigate(ScreenNames.NOTIFICATION);
@@ -72,20 +75,19 @@ const Profile = ({ navigation }) => {
   const getProfile = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      console.log(token,'chek')
+      console.log(token, 'chek');
       setProfileDataLoading(true);
-      const { response, status } = await Service.getAPI(
+      const {response, status} = await Service.getAPI(
         API_Endpoints.profile,
         token,
       );
       if (status) {
-        console.log(response?.data,':: Data Check')
+        console.log(response?.data, ':: Data Check');
         setProfileData(response?.data);
       }
     } catch (error) {
       console.error('error in getProfile', error);
-    }
-    finally {
+    } finally {
       setProfileDataLoading(false);
     }
   };
@@ -98,7 +100,7 @@ const Profile = ({ navigation }) => {
           title: 'Camera Permission',
           message: 'App needs access to your camera to take pictures.',
           buttonPositive: 'OK',
-        }
+        },
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     }
@@ -111,11 +113,11 @@ const Profile = ({ navigation }) => {
       Alert.alert('Permission Denied', 'Camera access is required.');
       return;
     }
-  
+
     console.log('openCamera');
-    launchCamera({ mediaType: 'photo', quality: 0.5 }, async (response) => {
+    launchCamera({mediaType: 'photo', quality: 0.5}, async response => {
       if (!response?.didCancel && response?.assets) {
-        setProfileData({ ...profileData, profile: response.assets[0].uri });
+        setProfileData({...profileData, profile: response.assets[0].uri});
         setModalVisible(false);
         uploadProfileAlongWithImage(response?.assets[0]?.uri);
       }
@@ -123,19 +125,22 @@ const Profile = ({ navigation }) => {
   };
 
   const openGallery = () => {
-    launchImageLibrary({
-      mediaType: 'photo',
-      quality: 0.5,
-    }, async (response) => {
-      if (!response?.didCancel && response?.assets) {
-        setProfileData({ ...profileData, profile: response.assets[0].uri });
-        setModalVisible(false);
-        uploadProfileAlongWithImage(response?.assets[0]?.uri);
-      }
-    })
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 0.5,
+      },
+      async response => {
+        if (!response?.didCancel && response?.assets) {
+          setProfileData({...profileData, profile: response.assets[0].uri});
+          setModalVisible(false);
+          uploadProfileAlongWithImage(response?.assets[0]?.uri);
+        }
+      },
+    );
   };
 
-  const uploadProfileAlongWithImage = async (uri) => {
+  const uploadProfileAlongWithImage = async uri => {
     try {
       const uniqueFileName = `profile_${Date.now()}.jpg`;
       const data = new FormData();
@@ -147,23 +152,26 @@ const Profile = ({ navigation }) => {
       data.append('image', {
         uri: uri,
         name: uniqueFileName,
-        type: 'image/jpeg'
+        type: 'image/jpeg',
       });
       const token = await AsyncStorage.getItem('token');
       setShowLoader(true);
-      const { response, status } = await Service.postAPI(API_Endpoints.update_profile, data, token);
+      const {response, status} = await Service.postAPI(
+        API_Endpoints.update_profile,
+        data,
+        token,
+      );
       if (status) {
-        console.log(response,'Prince :::')
+        console.log(response, 'Prince :::');
         Toast.show({
           type: 'success',
           text1: response?.message,
         });
         handleRefresh();
         setShowLoader(false);
-        
-          // getProfile(); 
-      }
-      else {
+
+        // getProfile();
+      } else {
         Toast.show({
           type: 'error',
           text1: response?.message,
@@ -174,26 +182,25 @@ const Profile = ({ navigation }) => {
       console.error('error in uploading image', err);
       setShowLoader(false);
     }
-  }
+  };
 
   const handleRefresh = () => {
     getProfile();
-  }
-
+  };
 
   //refrence
   const gotoTabs = title => {
     title === 'Order History'
       ? navigation.navigate(ScreenNames.COURSE_HISTORY)
       : title === 'Certificate'
-        ? navigation.navigate(ScreenNames.CERTIFICATE)
-        : title === 'Notifications'
-          ? navigation.navigate(ScreenNames.NOTIFICATION)
-          : navigation.navigate(ScreenNames.CART);
+      ? navigation.navigate(ScreenNames.CERTIFICATE)
+      : title === 'Notifications'
+      ? navigation.navigate(ScreenNames.NOTIFICATION)
+      : navigation.navigate(ScreenNames.CART);
     // Ensure 'EditProfile' is a valid screen
   };
 
-  const ProfileItem = ({ icon, title, onPress = () => { } }) => {
+  const ProfileItem = ({icon, title, onPress = () => {}}) => {
     return (
       <TouchableOpacity
         style={{
@@ -201,7 +208,7 @@ const Profile = ({ navigation }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
+          shadowOffset: {width: 0, height: 2},
           shadowOpacity: 0.5,
           shadowRadius: 2,
           elevation: 2,
@@ -230,7 +237,7 @@ const Profile = ({ navigation }) => {
     if (isFocused) {
       getProfile();
     }
-  }, [isFocused]); 
+  }, [isFocused]);
 
   //UI
   return (
@@ -249,14 +256,13 @@ const Profile = ({ navigation }) => {
             refreshing={profileDateLoading}
             onRefresh={handleRefresh}
           />
-        } 
-        >
+        }>
         <View style={styles.mainView}>
           <View
             style={{
               alignItems: 'center',
             }}>
-            <View >
+            <View>
               <Image
                 source={{
                   uri: profileData?.profile,
@@ -268,14 +274,16 @@ const Profile = ({ navigation }) => {
                   borderWidth: 2,
                 }}
               />
-              <TouchableOpacity onPress={() => setModalVisible(true)} style={{ position: 'absolute',top:0,right:0 }}>
-                <Icon name="edit" size={20} color={Colors.DARK_PURPLE}  />
+              <TouchableOpacity
+                onPress={() => setModalVisible(true)}
+                style={{position: 'absolute', top: 0, right: 0}}>
+                <Icon name="edit" size={20} color={Colors.DARK_PURPLE} />
               </TouchableOpacity>
             </View>
             <MyText
               text={profileData.name}
               fontFamily={SEMI_BOLD}
-              style={{ marginVertical: 6 }}
+              style={{marginVertical: 6}}
               fontSize={16}
             />
             <View
@@ -287,7 +295,7 @@ const Profile = ({ navigation }) => {
               <CallSvg />
               <MyText
                 text={profileData.mobile}
-                style={{ marginBottom: 5 }}
+                style={{marginBottom: 5}}
                 fontSize={13}
               />
             </View>
@@ -360,21 +368,57 @@ const Profile = ({ navigation }) => {
         onRequestClose={() => setModalVisible(false)}
         transparent={true}>
         <TouchableOpacity
-          style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end', alignItems: 'center' }}
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
           onPress={() => {
             setModalVisible(false);
           }}
-          activeOpacity={1}
-        >
+          activeOpacity={1}>
           <View style={styles.modalView}>
-            <MyButton
-              text={'Camera'}
-              style={{ flex: 1 }}
-              onPress={() => openCamera()} />
-            <MyButton
-              text={'Gallery'}
-              style={{ flex: 1, backgroundColor: Colors.DARK_PURPLE }}
-              onPress={() => openGallery()} />
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: responsiveHeight(3),
+              }}>
+              <MyText
+                text="Upload Profile Image"
+                textColor={Colors.BLACK}
+                fontSize={responsiveFontSize(2.5)}
+                fontFamily={MEDIUM}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                marginBottom: responsiveHeight(5),
+                width: '100%',
+              }}>
+              <TouchableOpacity
+                style={[styles.cameraGalleryView, {borderColor: Colors.GREEN}]}
+                onPress={openCamera}>
+                <Icon name="camera" size={60} color={Colors.GREEN} />
+                <Text style={[styles.cameraText, {color: Colors.GREEN}]}>
+                  Camera
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.cameraGalleryView}
+                onPress={openGallery}>
+                <NewIcon
+                  name="perm-media"
+                  size={60}
+                  color={Colors.DARK_PURPLE}
+                />
+                <Text style={styles.cameraText}>Gallery</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </TouchableOpacity>
       </Modal>
@@ -400,13 +444,24 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: '100%',
-    height: '20%',
     alignItems: 'center',
     backgroundColor: 'white',
-    flexDirection: 'row',
-    gap: 15,
-    paddingHorizontal: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+  },
+  cameraGalleryView: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderWidth: 0.5,
+    borderRadius: 10,
+    borderColor: Colors.DARK_PURPLE,
+    padding: 10,
+    width: '48%',
+  },
+  cameraText: {
+    fontSize: 20,
+    marginLeft: 10,
+    color: Colors.DARK_PURPLE,
+    fontFamily: REGULAR,
   },
 });

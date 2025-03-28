@@ -1,6 +1,12 @@
 //import : react component
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, FlatList, StyleSheet} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  FlatList,
+  StyleSheet,
+  RefreshControl,
+} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 //import : custom components
 import CourseCard from 'component/CourseCard/CourseCard';
@@ -31,6 +37,7 @@ const WishList = ({navigation}) => {
   //hook : modal states
   const [showLoader, setShowLoader] = useState(false);
   const [showBaseLoader, setShowBaseLoader] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   //variables : redux variables
   const gotoTrendingCourses = () => {
     // navigation.navigate(ScreenNames.TRENDING_COURSES);
@@ -81,11 +88,13 @@ const WishList = ({navigation}) => {
       );
       if (status) {
         setWishlistData(response.data);
-      }else{
+      } else {
         setWishlistData([]);
       }
     } catch (error) {
       console.error('error in getWishlist', error);
+    } finally {
+      setRefreshing(false);
     }
   };
   //hook : useEffect
@@ -96,8 +105,13 @@ const WishList = ({navigation}) => {
   }, [isFocused]);
 
   const gotoCourseDetails = id => {
-      navigation.navigate(ScreenNames.COURSE_DETAIL, {id});
-    };
+    navigation.navigate(ScreenNames.COURSE_DETAIL, {id});
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    initLoader();
+  }, []);
 
   //UI
   if (showBaseLoader) {
@@ -120,10 +134,13 @@ const WishList = ({navigation}) => {
               <CourseCard
                 item={item}
                 heartPress={() => addToWishlist(item.id)}
-                onPress={() => gotoCourseDetails(item.id)}
+                onPress={() => gotoCourseDetails(item?.course_id)}
               />
             );
           }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           onEndReachedThreshold={0.1}
           nestedScrollEnabled={true} // Allows inner scrolling
           contentContainerStyle={{
@@ -150,7 +167,7 @@ const WishList = ({navigation}) => {
                 //   textColor={'#455A64'}
                 //   style={{textAlign: 'center', marginTop: 20}}
                 // />
-                <NoDataFound/>
+                <NoDataFound />
               ) : (
                 <View style={{height: 20}} />
               ) // Empty space for better scrolling

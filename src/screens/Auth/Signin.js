@@ -51,8 +51,8 @@ const Signin = () => {
   useEffect(() => {
     if (isFocused) {
       setUserDetails({
-        email: 'shoaib@gmail.com',
-        password: 'test@123',
+        email: '',
+        password: '',
       });
       setError({
         email: false,
@@ -169,6 +169,7 @@ const Signin = () => {
       <ScrollView style={styles.scrollView} bounces={false}>
         <BackgroundImage />
         <Header
+          showCart={false}
           showLearneLogo={false}
           heading="Sign In"
           headingStyle={{color: 'black'}}
@@ -178,8 +179,8 @@ const Signin = () => {
           <CustomTextInput
             value={userDetails.email}
             onChangeText={onChangeEmail}
-            placeholder="Username Or Email Address"
-            Icon={<EmailLogo />}
+            placeholder="Email Address"
+            Icon={<EmailLogo height={25} width={25} />}
             style={{
               marginTop: responsiveHeight(2.5),
               borderColor: error.email ? 'red' : Colors.LIGHT_PURPLE,
@@ -189,7 +190,7 @@ const Signin = () => {
             value={userDetails.password}
             onChangeText={onChangePassword}
             placeholder="Password"
-            Icon={<PasswordLogo />}
+            Icon={<PasswordLogo height={25} width={25} />}
             style={{
               marginTop: responsiveHeight(1.5),
               borderColor: error.password ? 'red' : Colors.LIGHT_PURPLE,

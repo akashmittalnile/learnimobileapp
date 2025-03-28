@@ -1,5 +1,5 @@
 //import : react component
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   FlatList,
@@ -25,15 +25,19 @@ import {styles} from './SubCategoriesStyle';
 import NoDataFound from 'component/NoDataFound/NoDataFound';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
 import ListLoader from 'component/SkeltonLoader/ListLoader';
+import {useIsFocused} from '@react-navigation/native';
 //import : modals
 //import : redux
 
 const SubCategories = ({route, navigation}) => {
   //variables
+  const focused = useIsFocused();
+  const debounceRef = useRef(null);
   const {data} = route.params;
   //hook : states
   const [subCategoriesData, setSubCategoriesData] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [seachText, setSearchText] = useState('');
   //function : nav func
   const gotoCourseList = postData => {
     navigation.navigate(ScreenNames.COURSE_LIST, {data: postData});
@@ -63,10 +67,23 @@ const SubCategories = ({route, navigation}) => {
   };
   //hook : useEffect
   useEffect(() => {
-    getSubCategories();
+    if (focused) {
+      setSearchText('');
+      getSubCategories();
+    }
 
     return () => {};
-  }, []);
+  }, [focused]);
+
+  const debounceHandler = (name = '') => {
+    setSearchText(name);
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(() => {
+      getSubCategories(name);
+    }, 300);
+  };
 
   //UI
   return (
@@ -91,10 +108,9 @@ const SubCategories = ({route, navigation}) => {
       /> */}
         <View style={styles.mainView}>
           <SearchWithIcon
+            value={seachText}
             placeholder="Search by name"
-            onChangeText={text => {
-              getSubCategories(text);
-            }}
+            onChangeText={debounceHandler}
           />
           <SizeBox height={10} />
           {subCategoriesData?.length > 0 && (

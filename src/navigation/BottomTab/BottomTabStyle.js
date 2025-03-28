@@ -1,29 +1,29 @@
 import {Platform, StyleSheet} from 'react-native';
-import { dimensions } from '../../global/Constants';
+import {dimensions} from '../../global/Constants';
 
 export const styles = StyleSheet.create({
-    navigatorStyle: {
-        height: 90,
-        alignItems: 'center',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        width: dimensions.SCREEN_WIDTH * 0.99,
-        backgroundColor: 'red',
-        alignSelf: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        position: 'absolute',
-        borderTopWidth: 0, // Removes any border that could show a white line
-        elevation: 5, // Android shadow
-        shadowColor: '#000', // Shadow color
-        shadowOffset: {
-          width: 0,
-          height: -2, // Shadow offset for the negative y-axis
-        },
-        shadowOpacity: 0.1, // Opacity for shadow
-        shadowRadius: 10, // Blur radius for shadow
-      },
-      
+  navigatorStyle: {
+    height: 90,
+    alignItems: 'center',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    width: dimensions.SCREEN_WIDTH * 0.99,
+    backgroundColor: 'red',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    position: 'absolute',
+    borderTopWidth: 0, // Removes any border that could show a white line
+    elevation: 5, // Android shadow
+    shadowColor: '#000', // Shadow color
+    shadowOffset: {
+      width: 0,
+      height: -2, // Shadow offset for the negative y-axis
+    },
+    shadowOpacity: 0.1, // Opacity for shadow
+    shadowRadius: 10, // Blur radius for shadow
+  },
+
   tabStyle: {
     alignItems: 'center',
     // paddingTop: Platform.OS === 'android' ? 0 : 20
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
   tabStyle: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Platform.OS === 'android' ? 0 : 20,
+    paddingTop: 20,
     height: 90,
     width: 100,
     marginTop: 20,

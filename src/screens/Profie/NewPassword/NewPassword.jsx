@@ -9,12 +9,16 @@ import MyText from 'component/MyText/MyText';
 import CustomPasswordInput from 'component/TextInput/CustomPasswordInput';
 import {Colors, Service} from 'global/index';
 import BorderButton from 'component/MyButton/BorderButton';
-import {BOLD, MEDIUM} from 'global/Fonts';
-import {API_Endpoints} from 'global/Service';
+import {BOLD, MEDIUM, SEMI_BOLD} from 'global/Fonts';
+import {API_Endpoints, PostApiWithToken} from 'global/Service';
 import Toast from 'react-native-toast-message';
 import Loader from 'component/loader/Loader';
+import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {useRoute} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const NewPassword = ({navigation}) => {
   //hook : states
+  const {params} = useRoute();
   const [password, setPassword] = useState({password: '', confirmPassword: ''});
   const [error, setError] = useState({
     password: false,
@@ -34,6 +38,11 @@ const NewPassword = ({navigation}) => {
   const validator = () => {
     if (password.password?.length < 6) {
       setError(value => ({...value, password: true}));
+      Toast.show({
+        type: 'info',
+        text1: 'Password should have at least 6 digits',
+      });
+      return
     }
     if (
       password.confirmPassword?.length < 6 ||
@@ -55,27 +64,25 @@ const NewPassword = ({navigation}) => {
         return;
       }
       setLoader(true);
-      const {response, status} = await Service.postAPI(
+      const token = await AsyncStorage.getItem('token');
+      const response = await PostApiWithToken(
         API_Endpoints.change_password,
         {
           email: params?.email,
           password: password.password,
         },
+        token,
       );
 
-      if (status) {
-        Toast.show({
-          type: 'success',
-          text1: response?.message,
-        });
-        navigation.goBack();
-      } else {
-        Toast.show({
-          type: 'error',
-          text1: response?.message,
-        });
+      if (response?.data?.status) {
+        navigation?.goBack();
       }
+      Toast.show({
+        type: response?.data?.status ? 'success' : 'error',
+        text1: response?.data?.message,
+      });
     } catch (err) {
+      console.log('error in updating password', err);
     } finally {
       setLoader(false);
     }
@@ -97,7 +104,7 @@ const NewPassword = ({navigation}) => {
 
         <MyText
           text={'Change Password'}
-          fontFamily={BOLD}
+          fontFamily={SEMI_BOLD}
           fontSize={18}
           textAlign="center"
         />
@@ -105,11 +112,12 @@ const NewPassword = ({navigation}) => {
           text={`Enter your new password and \n confirm it`}
           fontFamily={MEDIUM}
           textAlign="center"
+          style={{lineHeight: responsiveHeight(2.8)}}
         />
         <CustomPasswordInput
           value={password.password}
           Icon={<Lock />}
-          placeholder="Password"
+          placeholder="New Password"
           onChangeText={onChangePassword}
           style={{
             ...styles.textInputStyle,

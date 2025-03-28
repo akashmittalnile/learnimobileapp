@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   NativeModules,
+  Linking,
 } from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {useDrawerStatus} from '@react-navigation/drawer';
@@ -35,7 +36,7 @@ import {styles} from './CustomDrawerStyle';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
 import {setCartCount} from 'reduxTooklit/CountSlice';
-import { responsiveWidth } from 'react-native-responsive-dimensions';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 const {StatusBarManager} = NativeModules;
 const CustomDrawer = ({navigation}) => {
   //variables
@@ -122,6 +123,7 @@ const CustomDrawer = ({navigation}) => {
   //function : imp func
   const logoutUser = async () => {
     await AsyncStorage.clear();
+    dispatch(setCartCount({cartCount: 0}));
     navigation.closeDrawer();
     navigation.dispatch(resetIndexGoToSplash);
   };
@@ -170,14 +172,26 @@ const CustomDrawer = ({navigation}) => {
             icon={<BookSvg />}
             onPress={() => gotoMyCourses()}
           />
-          <DrawerItem title={'About us'} icon={<InfoSvg />} />
+          <DrawerItem
+            title={'About us'}
+            icon={<InfoSvg />}
+            onPress={() => Linking.openURL('https://www.google.com')}
+          />
           <DrawerItem
             title={`Chat ${chatCount > 0 ? `(${chatCount})` : ''}`}
             icon={<HeadPhoneSvg />}
             onPress={() => gotoChatScreen()}
           />
-          <DrawerItem title={'Terms & Conditions'} icon={<NoteSvg />} />
-          <DrawerItem title={'Privacy Policy'} icon={<PrivacySvg />} />
+          <DrawerItem
+            title={'Terms & Conditions'}
+            icon={<NoteSvg />}
+            onPress={() => Linking.openURL('https://www.google.com')}
+          />
+          <DrawerItem
+            title={'Privacy Policy'}
+            icon={<PrivacySvg />}
+            onPress={() => Linking.openURL('https://www.google.com')}
+          />
           <DrawerItem
             title={'Logout'}
             icon={<LogoutSvg />}
@@ -192,9 +206,11 @@ const CustomDrawer = ({navigation}) => {
               columnGap: 10,
               marginVertical: 5,
             }}>
-            <FBSvg />
-            <YTSvg />
-            <INSTASvg />
+            <FBSvg onPress={() => Linking.openURL('https://www.google.com')} />
+            <YTSvg onPress={() => Linking.openURL('https://www.google.com')} />
+            <INSTASvg
+              onPress={() => Linking.openURL('https://www.google.com')}
+            />
           </View>
         </View>
         <View style={styles.profileContentStyle}>
@@ -214,7 +230,7 @@ const CustomDrawer = ({navigation}) => {
               <MyText
                 text={profileData.email}
                 textColor="white"
-                style={{maxWidth: responsiveWidth(45)}}
+                style={{maxWidth: responsiveWidth(43)}}
               />
             </View>
           </View>

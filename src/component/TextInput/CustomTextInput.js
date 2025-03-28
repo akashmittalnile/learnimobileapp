@@ -41,14 +41,15 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginLeft: responsiveWidth(2),
+    // width:'10%'
   },
   textInput: {
     height: '100%',
-    width: '100%',
+    width: '86%',
     fontSize: responsiveFontSize(2),
     fontFamily: 'Poppins-Regular',
     color: 'black',
-    paddingHorizontal: responsiveWidth(2),
+    paddingHorizontal: '2%',
   },
 });
 

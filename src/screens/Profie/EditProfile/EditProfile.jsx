@@ -29,7 +29,7 @@ const EditProfile = ({route, navigation}) => {
   const [editProfileData, setEditProfileData] = useState({
     name: data.name,
     email: data.email,
-    profile: data.image,
+    profile: data.profile,
   });
   const [number, setNumber] = useState({
     number: data.mobile,
@@ -59,12 +59,20 @@ const EditProfile = ({route, navigation}) => {
   //function : serv func
   const updateProfile = async () => {
     try {
+      const cleanedNumber = number?.number?.replace(/\D/g, '');
+      if (!cleanedNumber || cleanedNumber.length !== 10) {
+        Toast.show({
+          type: 'error',
+          text1: 'Please enter a valid 10-digit phone number',
+        });
+        return;
+      }
       setShowLoader(true);
       const postData = {
         name: editProfileData.name,
         email: editProfileData.email,
         country_code: '+' + number.callingCode,
-        mobile: number.number?.replace(/\D/g, ''),
+        mobile: cleanedNumber,
         cca2: number.cca2,
         image: editProfileData.profile,
       };
@@ -149,7 +157,7 @@ const EditProfile = ({route, navigation}) => {
           <View style={{height: 20}} />
           <MyButton text={'Save Changes'} onPress={() => updateProfile()} />
           <View style={{height: 20}} />
-          <MyButton text={'Clear All'} backgroundColor={Colors.DARK_PURPLE} />
+          {/* <MyButton text={'Clear All'} backgroundColor={Colors.DARK_PURPLE} /> */}
         </View>
       </ScrollView>
       <Loader visible={showLoader} />

@@ -7,6 +7,7 @@ import {
   FlatList,
   StyleSheet,
   Platform,
+  RefreshControl,
 } from 'react-native';
 //import : custom components
 import Header from 'component/Header/Header';
@@ -65,6 +66,7 @@ const CourseDetail = ({navigation, route}) => {
   const [showNotPurchased, setShowNotPurchased] = useState(false);
   const [showAppLoader, setShowAppLoader] = useState(false);
   const [showEditReview, setShowEditReview] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   //function : nav func
   const gotoChapterDetail = data => {
     navigation.navigate(ScreenNames.CHAPTER_DETAIL, {data});
@@ -147,12 +149,15 @@ const CourseDetail = ({navigation, route}) => {
     try {
       const token = await AsyncStorage.getItem('token');
       const endPoint = `${API_Endpoints.course_details}/${id}`;
+      console.log('qwer id', endPoint);
       const {response, status} = await Service.getAPI(endPoint, token);
       if (status) {
         setCourseData(response.data);
       }
     } catch (error) {
       console.error('error in getCourseDetail', error);
+    } finally {
+      setRefreshing(false);
     }
   };
   const addCourseInToCart = async () => {
@@ -223,6 +228,11 @@ const CourseDetail = ({navigation, route}) => {
     setShowAppLoader(false);
   };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    initLoader();
+  }, []);
+
   //UI
   if (showLoader) {
     return <CourseDetailLoader />;
@@ -245,9 +255,12 @@ const CourseDetail = ({navigation, route}) => {
             width: '100%',
             backgroundColor: Colors.BLACK,
           }}
-          controls
+          controls={true}
         />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           <View style={styles.mainView}>
             <MyText
               text={courseData.name}
@@ -309,6 +322,7 @@ const CourseDetail = ({navigation, route}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   columnGap: 5,
+                  width: '55%',
                 }}>
                 <Image
                   source={{uri: courseData.creator_profile}}
@@ -323,6 +337,8 @@ const CourseDetail = ({navigation, route}) => {
                   fontFamily={MEDIUM}
                   fontSize={12}
                   textColor={'black'}
+                  style={{flex: 1}}
+                  numberOfLines={1}
                 />
               </View>
             </View>
@@ -439,15 +455,52 @@ const CourseDetail = ({navigation, route}) => {
                 />
               </View>
             )}
-            <ViewAll text="Tags" showSeeAll={false} style={{marginTop: 20}} />
+            {courseData?.tags?.length > 0 && (
+              <ViewAll text="Tags" showSeeAll={false} style={{marginTop: 20}} />
+            )}
             {courseData?.tags?.length > 0 ? (
               <FlatList
-                data={courseData?.tags}
+                data={[courseData?.tags[0]]}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 style={{marginTop: 11}}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => <TagsItem item={item} />}
+              />
+            ) : (
+              <MyText
+                text={'No Tags found!'}
+                fontFamily="medium"
+                fontSize={18}
+                textAlign="center"
+                textColor={'black'}
+              />
+            )}
+            <Divider
+              color={Colors.LIGHT_PURPLE}
+              borderBottomWidth={2}
+              marginVertical={10}
+            />
+            {[courseData?.category_name]?.length > 0 && (
+              <ViewAll
+                text="Category"
+                showSeeAll={false}
+                style={{marginTop: 20}}
+              />
+            )}
+            {courseData?.tags?.length > 0 ? (
+              <FlatList
+                data={[{name: courseData?.category_name}]}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{marginTop: 11}}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => (
+                  <TagsItem
+                    item={item}
+                    style={{backgroundColor: Colors.DARK_PURPLE}}
+                  />
+                )}
               />
             ) : (
               <MyText

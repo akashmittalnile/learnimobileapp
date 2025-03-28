@@ -76,7 +76,16 @@ const ChatScreen = ({route}) => {
           .doc(docId)
           .collection('Messages')
           .add({...Data, createdAt: firestore.FieldValue.serverTimestamp()})
-          .then(() => {});
+          .then(async () => {
+            const token = await AsyncStorage.getItem('token');
+            await PostApiWithToken(
+              API_Endpoints.chatRecord,
+              {
+                msg: imageUrl ? 'Sent an attachment' : message,
+              },
+              token,
+            );
+          });
         setMessage('');
       } catch (error) {
         console.error('error in sendMessage', error);

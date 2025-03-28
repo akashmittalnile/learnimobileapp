@@ -20,7 +20,7 @@ const AddCard = ({
   visible,
   setVisibility,
   callFunctionAfterAddingcard = () => {},
-  style
+  style,
 }) => {
   //hook : states
   const [showLoader, setShowLoader] = useState(false);
@@ -51,13 +51,14 @@ const AddCard = ({
         postData,
         token,
       );
-
       if (status) {
         Toast.show({
           type: 'success',
           text1: response?.message,
         });
-        callFunctionAfterAddingcard('5');
+        setTimeout(() => {
+          callFunctionAfterAddingcard('5', status, response?.message);
+        }, 700);
         closeModal();
       } else {
         Toast.show({text1: response?.message});
@@ -98,7 +99,7 @@ const AddCard = ({
             style={{
               width: dimensions.SCREEN_WIDTH * 0.9,
               marginBottom: 10,
-              backgroundColor: Colors.THEME_BROWN,
+              backgroundColor: Colors.DARK_PURPLE,
             }}
             onPress={() => onAddCard()}
           />

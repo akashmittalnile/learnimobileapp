@@ -10,7 +10,8 @@ import {Colors, ScreenNames, Service} from 'global/index';
 //import : styles
 import {styles} from './SuccesfulyPurchasedStyle';
 import MyButton from 'component/MyButton/MyButton';
-import {BOLD, REGULAR} from 'global/Fonts';
+import {BOLD, REGULAR, SEMI_BOLD} from 'global/Fonts';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 const SuccessfulyPurchased = ({
   visible,
@@ -42,6 +43,7 @@ const SuccessfulyPurchased = ({
           <View
             style={{
               alignSelf: 'center',
+              height: responsiveHeight(20),
             }}>
             <SuccessSvg />
           </View>
@@ -50,7 +52,7 @@ const SuccessfulyPurchased = ({
             text={title || 'Successfully Purchased!'}
             textColor={Colors.BLACK}
             fontSize={24}
-            fontFamily={BOLD}
+            fontFamily={SEMI_BOLD}
             textAlign="center"
             marginVertical={10}
           />

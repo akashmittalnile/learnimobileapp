@@ -71,16 +71,19 @@ const HomeCourseCard = ({
         </FastImage>
       ) : null}
       <View style={styles.bottomRow}>
-         <MyText
-            text={item.name}
-            fontFamily={Fonts.MEDIUM}
-            fontSize={16}
-            textColor={Colors.BLACK}
-            numberOfLines={2}
-            style={{ textAlignVertical: 'top', alignSelf: 'flex-start' }}
-          />
-        <View style={{width: dimensions.SCREEN_WIDTH * 0.61,alignSelf: 'flex-start' }}>
-         
+        <MyText
+          text={item.name}
+          fontFamily={Fonts.MEDIUM}
+          fontSize={16}
+          textColor={Colors.BLACK}
+          numberOfLines={2}
+          style={{textAlignVertical: 'top', alignSelf: 'flex-start'}}
+        />
+        <View
+          style={{
+            width: dimensions.SCREEN_WIDTH * 0.61,
+            alignSelf: 'flex-start',
+          }}>
           <View
             style={[
               styles.courseNameView,
@@ -130,19 +133,19 @@ const HomeCourseCard = ({
           {
             marginBottom: 9,
             justifyContent: 'space-between',
-            width: '96%',
+            width: '100%',
             alignSelf: 'center',
           },
         ]}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', width: '72%'}}>
           <Image
             source={{uri: item.creator_profile}}
-            resizeMethod='contain'
+            resizeMethod="contain"
             style={{
+              marginLeft: 5,
               height: 24,
               width: 24,
               borderRadius: 100,
-
             }}
           />
           <MyText
@@ -151,11 +154,12 @@ const HomeCourseCard = ({
             fontSize={13}
             textColor={Colors.BLACK}
             letterSpacing={0.13}
-            style={{marginLeft: 10, top: 3}}
+            style={{marginLeft: 10, top: 3, flex: 1}}
+            numberOfLines={1}
           />
         </View>
 
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', width: '23%'}}>
           <TouchableOpacity
             onPress={() => {
               addToWishlist();
@@ -166,7 +170,7 @@ const HomeCourseCard = ({
               color={Colors.PINK}
             />
           </TouchableOpacity>
-          <Share style={{marginLeft:4,marginTop:3}}></Share>
+          <Share style={{marginLeft: 4, marginTop: 3}}></Share>
         </View>
       </View>
     </TouchableOpacity>

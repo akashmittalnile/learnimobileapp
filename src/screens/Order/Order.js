@@ -9,6 +9,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 //global
 import Header from '../../component/Header/Header';
@@ -70,7 +71,7 @@ const Order = ({navigation}) => {
   ];
 
   const [orderData, setOrderData] = useState([]);
-
+  const [refreshing, setRefreshing] = useState(false);
   const getHome = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
@@ -83,6 +84,8 @@ const Order = ({navigation}) => {
       }
     } catch (error) {
       console.error('error in getHome', error);
+    } finally {
+      setRefreshing(false);
     }
   };
   //hook : useEffect
@@ -290,6 +293,11 @@ const Order = ({navigation}) => {
       </View>
     );
   };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getHome();
+  }, []);
   //UI
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -312,6 +320,9 @@ const Order = ({navigation}) => {
           paddingBottom: 50, // Ensure enough space to scroll to bottom
           flexGrow: 1, // Ensures FlatList takes full height
         }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         ListHeaderComponent={() => (
           <View style={{marginVertical: 12}}>
             <SearchWithIcon

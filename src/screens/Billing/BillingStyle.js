@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   mainView: {
+    flex: 1,
     padding: 20,
   },
   summaryContainer: {

@@ -90,6 +90,7 @@ const VerifyCode = () => {
       <ScrollView style={styles.scrollView} bounces={false}>
         <BackgroundImage />
         <Header
+          showCart={false}
           showLearneLogo={false}
           heading="Verification Code"
           headingStyle={{color: 'black'}}
@@ -125,13 +126,12 @@ const VerifyCode = () => {
           secureTextEntry={false}
           focusStickBlinkingDuration={500}
           onTextChange={onChangeotp}
-          
           theme={{
             containerStyle: styles.OtpContainer,
             pinCodeContainerStyle: styles.pinCodeContainerStyle,
             pinCodeTextStyle: {
               color: 'black',
-            }
+            },
           }}
         />
 

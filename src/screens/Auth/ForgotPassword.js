@@ -65,6 +65,7 @@ const ForgotPassword = () => {
       <ScrollView style={styles.scrollView} bounces={false}>
         <BackgroundImage />
         <Header
+          showCart={false}
           showLearneLogo={false}
           heading="Forgot Password"
           headingStyle={{color: 'black'}}
@@ -77,7 +78,7 @@ const ForgotPassword = () => {
         <Text style={styles.title}>Forgot Password</Text>
 
         <Text style={styles.description}>
-          We Will Send An 4 Digit OTP In Your {'\n'}Registered Email ID
+          We will send a 4 digit OTP on your {'\n'}registered Email ID
         </Text>
 
         <CustomTextInput
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     letterSpacing: 0.3,
     textAlign: 'center',
-    lineHeight: responsiveHeight(2.2),
+    lineHeight: responsiveHeight(2.8),
   },
   textInputStyle: {
     marginTop: responsiveHeight(2.5),

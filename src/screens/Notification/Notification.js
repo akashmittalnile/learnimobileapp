@@ -1,4 +1,10 @@
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  RefreshControl,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Background from 'assets/svgs/background.svg';
 import Header from 'component/Header/Header';
@@ -24,6 +30,7 @@ import Toast from 'react-native-toast-message';
 const Notification = () => {
   const navigation = useNavigation();
   const [notification, setNotification] = useState([]);
+  console.log('notification', notification);
   const [loader, setLoader] = useState(false);
   const getNotification = async () => {
     setLoader(true);
@@ -85,7 +92,11 @@ const Notification = () => {
         showLearneLogo={false}
         showCart={false}
         showBackButton={true}></Header>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={loader} onRefresh={getNotification} />
+        }>
         {notification?.length > 0 && (
           <TouchableOpacity onPress={() => clearNotification()}>
             <MyText
@@ -111,14 +122,26 @@ const Notification = () => {
               paddingTop: responsiveHeight(15),
             }}>
             <NotificationIcon height={110} width={110} />
-            <Text style={{marginTop: 3, fontSize: 20, fontFamily: MEDIUM}}>
-              No notification yet
+            <Text
+              style={{
+                marginTop: 3,
+                fontSize: 20,
+                fontFamily: MEDIUM,
+                color: Colors.BLACK,
+              }}>
+              No notifications yet
             </Text>
             <Text
-              style={{marginVertical: 5, fontSize: 16, fontFamily: REGULAR}}>
+              style={{
+                marginVertical: 5,
+                fontSize: 16,
+                fontFamily: REGULAR,
+                color: Colors.BLACK,
+              }}>
               Stay Connected! and Informed
             </Text>
-            <Text style={{fontSize: 16, fontFamily: REGULAR}}>
+            <Text
+              style={{fontSize: 16, fontFamily: REGULAR, color: Colors.BLACK}}>
               with Our Notification Center
             </Text>
 

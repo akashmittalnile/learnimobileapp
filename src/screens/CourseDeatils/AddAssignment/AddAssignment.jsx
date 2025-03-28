@@ -29,6 +29,7 @@ const AddAssignment = ({route, navigation}) => {
   //hook : states
   const [files, setFiles] = useState([]);
   const [assignments, setAssignments] = useState([]);
+  const [enableUploadFile, setEnableUploadFile] = useState(true);
   //hook : modal states
   const [showLoader, setShowLoader] = useState(false);
   const [showImagePreview, setShowImagePreview] = useState(false);
@@ -57,7 +58,12 @@ const AddAssignment = ({route, navigation}) => {
       const endPoint = `${API_Endpoints.assignment_details}/${data.step_id}`;
       const {response, status} = await Service.getAPI(endPoint, token);
       if (status) {
-        setAssignments(response?.data?.uploads);
+        setEnableUploadFile(
+          response?.data?.is_completed === '2' ? true : false,
+        );
+        setAssignments(
+          response?.data?.uploads?.length > 0 ? response?.data?.uploads : [],
+        );
       }
     } catch (error) {
       console.error('error in getAssignmentInfo', error);
@@ -69,7 +75,15 @@ const AddAssignment = ({route, navigation}) => {
         allowMultiSelection: true,
         type: [DocumentPicker.types.allFiles],
       });
-      setFiles(results);
+      const isValid = results?.filter(item => item?.size > 5000000);
+      if (!isValid?.length > 0) {
+        setFiles(results);
+      } else {
+        Toast.show({
+          type: 'info',
+          text1: 'File size should not be greater than 5MB',
+        });
+      }
     } catch (error) {
       console.error('error in selectFile', error);
     }
@@ -111,6 +125,11 @@ const AddAssignment = ({route, navigation}) => {
     return () => {};
   }, []);
 
+  const deleteHandler = (item, _index) => {
+    const result = files.filter((_, index) => index != _index);
+    setFiles(result);
+  };
+
   //UI
   return (
     <View style={styles.container}>
@@ -134,7 +153,7 @@ const AddAssignment = ({route, navigation}) => {
             alignItems: 'center',
           }}>
           <MyText text={'Upload your file'} fontFamily={SEMI_BOLD} />
-          <MyText text={'pdf, doc, docx, xlsx. Max. File are allowed'} />
+          <MyText text={'pdf, doc, docx, jpg etc Files are allowed'} />
           <MyText text={'Size: 5 MB'} />
           <SizeBox height={10} />
           {files.length > 0 ? (
@@ -161,33 +180,43 @@ const AddAssignment = ({route, navigation}) => {
                       color={Colors.BLACK}
                     />
                     <MyText text={item.name} style={{width: '70%'}} />
-                    <MyIcon.AntDesign
-                      name="delete"
-                      size={24}
-                      color={Colors.RED}
-                    />
+                    <TouchableOpacity
+                      onPress={() => {
+                        deleteHandler(item, index);
+                      }}>
+                      <MyIcon.AntDesign
+                        name="delete"
+                        size={24}
+                        color={Colors.RED}
+                      />
+                    </TouchableOpacity>
                   </View>
                 );
               })}
               <MyButton text={'Upload'} onPress={() => uploadAssignment()} />
             </>
           ) : (
-            <TouchableOpacity
-              onPress={() => selectFile()}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: '100%',
-                borderStyle: 'dotted',
-                borderRadius: 5,
-                borderWidth: 2,
-                borderColor: '#5E4AF7',
-                padding: 10,
-              }}>
-              <ExportSvg />
-              <MyText text={'Upload File'} />
-              <MyIcon.AntDesign name="arrowright" size={24} />
-            </TouchableOpacity>
+            <>
+              {(assignments?.length === 0 ||
+                (assignments?.length > 0 && enableUploadFile)) && (
+                <TouchableOpacity
+                  onPress={() => selectFile()}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    borderStyle: 'dotted',
+                    borderRadius: 5,
+                    borderWidth: 2,
+                    borderColor: '#5E4AF7',
+                    padding: 10,
+                  }}>
+                  <ExportSvg />
+                  <MyText text={'Upload File'} />
+                  <MyIcon.AntDesign name="arrowright" size={24} />
+                </TouchableOpacity>
+              )}
+            </>
           )}
         </View>
         <View>

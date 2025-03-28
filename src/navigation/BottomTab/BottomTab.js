@@ -11,11 +11,15 @@ import {BOLD, EXTRA_BOLD, BLACK} from '../../global/Fonts';
 import {styles} from './BottomTabStyle';
 import Home from '../../screens/Home/Home';
 import HomeInactive from 'assets/images/homeInactive.svg';
+import HomeActive from 'assets/images/homeActive.svg';
 
 import Color from '../../global/Color';
 import OrderInactive from 'assets/images/orderInactive.svg';
+import OrderActive from 'assets/images/orderActive.svg';
 import ProfileInactive from 'assets/images/profileInactive.svg';
+import ProfileActive from 'assets/images/profileActive.svg';
 import WishListInactive from 'assets/images/wishListInactive.svg';
+import WishListActive from 'assets/images/wishlistActive.svg';
 
 import WishList from '../../screens/WishList/WishList';
 import Order from '../../screens/Order/Order';
@@ -54,14 +58,14 @@ const BottomTab = ({userToken}) => {
           tabBarIcon: ({focused}) => (
             <View style={styles.tabStyle}>
               {focused ? (
-                <HomeInactive height={24} width={24}></HomeInactive>
+                <HomeActive height={24} width={24}></HomeActive>
               ) : (
                 <HomeInactive height={24} width={24}></HomeInactive>
               )}
               <Text
                 style={{
-                  fontSize: 12,
-                  color: focused ? '#132A3A' : 'black',
+                  fontSize: 14,
+                  color: focused ? '#5E4AF7' : 'black',
                   marginTop: 5,
                   fontFamily: BLACK,
                 }}>
@@ -78,14 +82,14 @@ const BottomTab = ({userToken}) => {
           tabBarIcon: ({focused}) => (
             <View style={styles.tabStyle}>
               {focused ? (
-                <WishListInactive height={24} width={24}></WishListInactive>
+                <WishListActive height={24} width={24}></WishListActive>
               ) : (
                 <WishListInactive height={24} width={24}></WishListInactive>
               )}
               <Text
                 style={{
-                  fontSize: 12,
-                  color: focused ? '#132A3A' : 'black',
+                  fontSize: 14,
+                  color: focused ? '#5E4AF7' : 'black',
                   marginTop: 5,
                   fontFamily: BLACK,
                 }}>
@@ -102,14 +106,14 @@ const BottomTab = ({userToken}) => {
           tabBarIcon: ({focused}) => (
             <View style={styles.tabStyle}>
               {focused ? (
-                <OrderInactive height={24} width={24}></OrderInactive>
+                <OrderActive height={24} width={24}></OrderActive>
               ) : (
                 <OrderInactive height={24} width={24}></OrderInactive>
               )}
               <Text
                 style={{
-                  fontSize: 12,
-                  color: focused ? '#132A3A' : 'black',
+                  fontSize: 14,
+                  color: focused ? '#5E4AF7' : 'black',
                   marginTop: 5,
                   fontFamily: BLACK,
                 }}>
@@ -126,14 +130,14 @@ const BottomTab = ({userToken}) => {
           tabBarIcon: ({focused}) => (
             <View style={styles.tabStyle}>
               {focused ? (
-                <ProfileInactive height={24} width={24}></ProfileInactive>
+                <ProfileActive height={24} width={24}></ProfileActive>
               ) : (
                 <ProfileInactive height={24} width={24}></ProfileInactive>
               )}
               <Text
                 style={{
-                  fontSize: 12,
-                  color: focused ? '#132A3A' : 'black',
+                  fontSize: 14,
+                  color: focused ? '#5E4AF7' : 'black',
                   marginTop: 5,
                   fontFamily: BLACK,
                 }}>

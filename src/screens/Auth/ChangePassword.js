@@ -94,6 +94,7 @@ const ChangePassword = () => {
       <ScrollView style={styles.scrollView} bounces={false}>
         <BackgroundImage />
         <Header
+          showCart={false}
           showLearneLogo={false}
           heading="Change Password"
           headingStyle={{color: 'black'}}
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     letterSpacing: 0.3,
     textAlign: 'center',
-    lineHeight: responsiveHeight(2.2),
+    lineHeight: responsiveHeight(2.8),
   },
   textInputStyle: {
     marginTop: responsiveHeight(2.5),

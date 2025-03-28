@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import {
+  responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
     marginLeft: responsiveWidth(2),
   },
   textInput: {
+     fontSize: responsiveFontSize(2),
     height: '100%',
     width: '80%',
     fontFamily: 'Poppins-Regular',
