@@ -51,8 +51,8 @@ const Signin = () => {
   useEffect(() => {
     if (isFocused) {
       setUserDetails({
-        email: 'kajalandroid@yopmail.com',
-        password: 'Beast@205',
+        email: 'shoaib@gmail.com',
+        password: 'test@123',
       });
       setError({
         email: false,

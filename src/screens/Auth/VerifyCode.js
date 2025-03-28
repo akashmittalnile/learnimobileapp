@@ -11,7 +11,7 @@ import {
 import BorderButton from '../../component/MyButton/BorderButton';
 import BorderLessButton from '../../component/MyButton/BorderLessButton';
 import {OtpInput} from 'react-native-otp-entry';
-import {Colors, Service} from '../../global';
+import {Colors} from '../../global';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import Loader from '../../component/loader/Loader';
 import {API_Endpoints, PostApi} from '../../global/Service';
@@ -42,7 +42,6 @@ const VerifyCode = () => {
       });
       if (response?.data?.status) {
         setTempOtp(response?.data?.data?.otp);
-        setOtp('');
       }
       Toast.show({
         type: response?.data?.status ? 'success' : 'error',
@@ -58,35 +57,25 @@ const VerifyCode = () => {
   const verifyOtp = async () => {
     try {
       if (otp?.length < 4) {
-        Toast.show({
-          type: 'error',
-          text1: 'Please enter OTP',
-        });
         return;
       }
       setLoader(true);
-      const formData = new FormData();
-      formData.append('email', params?.email);
-      formData.append('otp', otp);
-      const {response, status} = await Service.postAPI(
-        API_Endpoints.otpVerification,
-        formData,
-      );
-      console.log('RESPONSE', response);
-
-      if (status) {
+      const response = await PostApi(API_Endpoints.otpVerification, {
+        email: params?.email,
+        otp,
+      });
+      Toast.show({
+        type: response?.data?.status ? 'success' : 'error',
+        text1: response?.data?.message,
+      });
+      if (response?.data?.status) {
         navigation.navigate('CHANGE_PASSWORD', {
           email: params?.email,
           otp,
         });
-      } else {
-        Toast.show({
-          type: response?.status ? 'success' : 'error',
-          text1: response?.message,
-        });
       }
     } catch (err) {
-      console.error('error in verifyOtp', err);
+      console.error('error in verifying otp', err);
     } finally {
       setLoader(false);
     }
@@ -98,14 +87,13 @@ const VerifyCode = () => {
 
   return (
     <View style={styles.container}>
-      <Header
-        showLearneLogo={false}
-        heading="Verification Code"
-        headingStyle={{color: 'black'}}
-        showCart={false}
-      />
       <ScrollView style={styles.scrollView} bounces={false}>
         <BackgroundImage />
+        <Header
+          showLearneLogo={false}
+          heading="Verification Code"
+          headingStyle={{color: 'black'}}
+        />
 
         <View style={styles.logoContainer}>
           <PasswordCheck />
@@ -137,12 +125,13 @@ const VerifyCode = () => {
           secureTextEntry={false}
           focusStickBlinkingDuration={500}
           onTextChange={onChangeotp}
+          
           theme={{
             containerStyle: styles.OtpContainer,
             pinCodeContainerStyle: styles.pinCodeContainerStyle,
             pinCodeTextStyle: {
               color: 'black',
-            },
+            }
           }}
         />
 

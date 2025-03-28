@@ -58,7 +58,7 @@ console.log({cca2})
               setShowCountryModal(false);
             }}
           />
-          <Text>+{callingCode ? callingCode : '1'}</Text>
+          <Text style = {{color:'black'}}>+{callingCode ? callingCode : '1'}</Text>
           <ArrowDown />
         </TouchableOpacity>
       </View>

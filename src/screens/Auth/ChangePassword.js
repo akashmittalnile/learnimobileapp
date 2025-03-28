@@ -97,7 +97,6 @@ const ChangePassword = () => {
           showLearneLogo={false}
           heading="Change Password"
           headingStyle={{color: 'black'}}
-          showCart={false}
         />
 
         <View style={styles.logoContainer}>
