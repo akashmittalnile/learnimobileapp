@@ -52,15 +52,6 @@ const AuthStack = () => {
       <Stack.Screen name={ScreenNames.VERIFY_CODE} component={VerifyCode} />
       <Stack.Screen name={ScreenNames.CHANGE_PASSWORD} component={ChangePassword} />
       <Stack.Screen name={ScreenNames.SIGN_UP} component={SignUp} />
-      <Stack.Screen
-        name={ScreenNames.FORGOT_PASSWORD}
-        component={ForgotPassword}
-      />
-      <Stack.Screen name={ScreenNames.VERIFY_CODE} component={VerifyCode} />
-      <Stack.Screen
-        name={ScreenNames.CHANGE_PASSWORD}
-        component={ChangePassword}
-      />
       <Stack.Screen name={ScreenNames.BOTTOM_TAB} component={BottomTab} />
       <Stack.Screen name={ScreenNames.EDIT_PROFILE} component={EditProfile} />
       <Stack.Screen name={ScreenNames.COURSE_HISTORY} component={OderHistory} />

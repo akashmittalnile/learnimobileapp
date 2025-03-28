@@ -18,26 +18,33 @@ import UserLogo from 'assets/images/user.svg';
 import EmailLogo from 'assets/images/sms.svg';
 import Loader from 'component/loader/Loader';
 import {API_Endpoints} from 'global/Service';
+import { getAllCountries } from 'react-native-country-picker-modal';
 
 const EditProfile = ({route, navigation}) => {
   //variables
   const {data} = route.params;
+  console.log('data', data,);
+
   //hook : states
   const [editProfileData, setEditProfileData] = useState({
     name: data.name,
     email: data.email,
+    profile: data.image,
   });
   const [number, setNumber] = useState({
     number: data.mobile,
-    cca2: 'US',
+    cca2: data.cca2,
     callingCode: Number(data.country_code),
   });
+  console.log('number', number);
   //hook : modal states
   const [showLoader, setShowLoader] = useState(false);
   //function : nav func
   const goBack = () => {
     navigation.goBack();
   };
+
+  
   //function :imp func
   const numberHandler = number => {
     setNumber(value => ({...value, number}));
@@ -59,7 +66,7 @@ const EditProfile = ({route, navigation}) => {
         country_code: '+' + number.callingCode,
         mobile: number.number?.replace(/\D/g, ''),
         cca2: number.cca2,
-        image: '',
+        image: editProfileData.profile,
       };
       const token = await AsyncStorage.getItem('token');
       const {response, status} = await Service.postAPI(
@@ -73,6 +80,12 @@ const EditProfile = ({route, navigation}) => {
           text1: response?.message,
         });
         goBack();
+      }
+      else{
+        Toast.show({
+          type: 'error',
+          text1: response?.message,
+        });
       }
     } catch (err) {
       console.error('error in registering user', err);
