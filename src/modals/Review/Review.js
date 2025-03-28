@@ -17,7 +17,13 @@ import {styles} from './ReviewStyle';
 //import : modals
 //import : redux
 
-const Review = ({visible, setVisibility, id, nextFunction = () => {}}) => {
+const Review = ({
+  visible,
+  setVisibility,
+  id,
+  nextFunction = () => {},
+  style,
+}) => {
   //variables
   let starArray = [1, 2, 3, 4, 5];
   //hook : states
@@ -62,14 +68,14 @@ const Review = ({visible, setVisibility, id, nextFunction = () => {}}) => {
   //UI
   return (
     <Modal visible={visible} transparent animationType="slide">
-      <View style={styles.container}>
+      <View style={{...styles.container, ...style}}>
         <TouchableOpacity
           style={styles.blurView}
           onPress={() => closeModal()}
         />
         <View style={styles.mainView}>
           <MyText
-            text={'Review & Rating'}
+            text={'Rating & Review'}
             fontFamily={BLACK}
             fontSize={18}
             textColor={'black'}
@@ -114,8 +120,8 @@ const Review = ({visible, setVisibility, id, nextFunction = () => {}}) => {
           <MyButton text={'Submit'} onPress={() => submitReview()} />
           <SizeBox height={10} />
           <MyButton
-            text={'Clear All'}
-            backgroundColor={Colors.DARK_PURPLE}
+            text={'Cancel'}
+            backgroundColor={Colors.RED}
             onPress={() => closeModal()}
           />
         </View>

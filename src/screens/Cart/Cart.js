@@ -10,7 +10,7 @@ import {Colors, ScreenNames, Service} from 'global/index';
 import {styles} from './CartStyle';
 //import : modal
 //import : redux
-import {connect, useSelector} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import {dimensions} from 'global/Constants';
 import Divider from 'component/Divider/Divider';
 import MyButton from 'component/MyButton/MyButton';
@@ -19,7 +19,7 @@ import ViewAll from 'component/ViewAll/ViewAll';
 import {createThumbnail} from 'react-native-create-thumbnail';
 // import { setCartCount } from '../../../reduxToolkit/reducer/user';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_Endpoints} from 'global/Service';
+import {API_Endpoints, PostApiWithToken} from 'global/Service';
 import Item from 'component/Item/Item';
 import {
   responsiveHeight as hg,
@@ -29,11 +29,20 @@ import Background from 'assets/svgs/background.svg';
 import CartItem from 'component/CartItem/CartItem';
 import SizeBox from 'component/SizeBox/SizeBox';
 import {MEDIUM} from 'global/Fonts';
+import {deleteToken} from '@react-native-firebase/messaging';
+import {setCartCount} from 'reduxTooklit/CountSlice';
+import Loader from 'component/loader/Loader';
+import ListLoader from 'component/SkeltonLoader/ListLoader';
+import NoDataFound from 'component/NoDataFound/NoDataFound';
 // import Item from '../../../components/Item/Item';
 // import ShippingModal from '../../../modals/ShippingModal/ShippingModal';
 
-const Cart = ({navigation, dispatch}) => {
+const Cart = ({navigation}) => {
+  const dispatch = useDispatch();
+  const cartCount = useSelector(state => state.count?.cartCount);
   const focused = useIsFocused();
+  const [loader, setLoader] = useState(false);
+  const [skeletonLoader, setSkeletonLoader] = useState(true);
   // let { params } = useRoute();
   //variables
   const LINE_HEIGTH = 25;
@@ -73,9 +82,13 @@ const Cart = ({navigation, dispatch}) => {
       );
       if (status) {
         setCartListData(response?.data);
+      } else {
+        setCartListData([]);
       }
     } catch (error) {
       console.error('error in getHome', error);
+    } finally {
+      setSkeletonLoader(false);
     }
   };
 
@@ -113,141 +126,172 @@ const Cart = ({navigation, dispatch}) => {
   useEffect(() => {
     getHome();
   }, [focused]);
+
+  const onPressDeleteButtonHandler = async item => {
+    try {
+      setLoader(true);
+      const token = await AsyncStorage.getItem('token');
+      const response = await PostApiWithToken(
+        API_Endpoints.remove_cart,
+        {id: item?.id, type: 1},
+        token,
+      );
+      if (response?.data?.status) {
+        dispatch(setCartCount({cartCount: cartCount - 1}));
+        getHome();
+      }
+    } catch (err) {
+      console.log('error in removing item from cart', err);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   //UI
   return (
-    <View style={styles.container}>
-      <Header
-        showNotification={false}
-        heading={'Shopping Cart'}
-        showLearneLogo={false}
-        showCart={false}
-        showBackButton={true}
-      />
-      <ScrollView style={styles.mainView}>
-        <Background style={StyleSheet.absoluteFill} />
-        {cartListData?.items?.length > 0 ? (
-          <View style={{marginTop: 20}}>
-            <FlatList
-              data={cartListData?.items}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => {
-                return <CartItem item={item} />;
-              }}
-            />
-            <>
-              <ViewAll
-                text="Order Summary"
-                showSeeAll={false}
-                style={{marginTop: 41, marginHorizontal: 5}}
-              />
-              <View
-                style={[
-                  styles.summaryContainer,
-                  {
-                    width: dimensions.SCREEN_WIDTH * 0.9,
-                    alignSelf: 'center',
-                    borderWidth: 1,
-                    borderColor: Colors.LIGHT_PURPLE,
-                    marginTop: 14,
-                  },
-                ]}>
-                <View style={[styles.row, {marginBottom: 10}]}>
-                  <MyText
-                    text={`Subtotal (${
-                      cartListData?.items?.length > 0
-                        ? cartListData?.items?.length
-                        : 0
-                    })`}
-                    fontSize={16}
-                    fontFamily={MEDIUM}
-                    textColor={Colors.DARK_PURPLE}
-                    style={{}}
-                  />
-                  <MyText
-                    text={
-                      cartListData?.subTotal
-                        ? '$' + Number(cartListData?.subTotal)?.toFixed(2)
-                        : '$' + 0
-                    }
-                    fontSize={16}
-                    fontFamily={MEDIUM}
-                    textColor={Colors.DARK_PURPLE}
-                    style={{}}
-                  />
-                </View>
-
-                <View style={[styles.row, {marginBottom: 19}]}>
-                  <MyText
-                    text={`Tax`}
-                    fontSize={14}
-                    fontFamily={MEDIUM}
-                    textColor={Colors.GREEN}
-                    style={{}}
-                  />
-                  <MyText
-                    text={
-                      cartListData?.tax
-                        ? '$' + Number(cartListData?.tax)?.toFixed(2)
-                        : '$' + 0
-                    }
-                    fontSize={14}
-                    fontFamily={MEDIUM}
-                    textColor={Colors.GREEN}
-                    style={{}}
-                  />
-                </View>
-                <Divider
-                  style={{borderColor: '#E0E0E0'}}
-                  color={Colors.LIGHT_PURPLE}
-                />
-                <View style={[styles.row, {marginTop: 14}]}>
-                  <MyText
-                    text={`Total`}
-                    fontSize={18}
-                    fontFamily={MEDIUM}
-                    textColor={'#292D32'}
-                    style={{}}
-                  />
-                  <MyText
-                    text={
-                      cartListData?.totalPrice
-                        ? '$' + Number(cartListData?.totalPrice)?.toFixed(2)
-                        : '$' + 0
-                    }
-                    fontSize={18}
-                    fontFamily={MEDIUM}
-                    textColor={'#292D32'}
-                    style={{}}
-                  />
-                </View>
-              </View>
-              <MyButton
-                text={'Proceed to payment'}
-                style={{
-                  width: dimensions.SCREEN_WIDTH * 0.95,
-                  marginBottom: 10,
-                  backgroundColor: Colors.GREEN,
-                  marginTop: 32,
-                  alignSelf: 'center',
+    <>
+      <View style={styles.container}>
+        <Header
+          showNotification={false}
+          heading={'Shopping Cart'}
+          showLearneLogo={false}
+          showCart={false}
+          showBackButton={true}
+        />
+        <ScrollView style={styles.mainView}>
+          <Background style={StyleSheet.absoluteFill} />
+          {cartListData?.items?.length > 0 ? (
+            <View style={{marginTop: 20}}>
+              <FlatList
+                data={cartListData?.items}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => {
+                  return (
+                    <CartItem
+                      item={item}
+                      onPressDeleteButtonHandler={onPressDeleteButtonHandler}
+                    />
+                  );
                 }}
-                onPress={gotoShippingScreen}
               />
-              <SizeBox height={30} />
-            </>
-          </View>
-        ) : (
-          <View style={{alignItems: 'center', marginTop: 50}}>
-            <MyText
-              text={'Your cart is empty'}
-              fontFamily={MEDIUM}
-              fontSize={40}
-              textAlign="center"
-              textColor={'black'}
-            />
-          </View>
-        )}
-      </ScrollView>
-    </View>
+              <>
+                <ViewAll
+                  text="Order Summary"
+                  showSeeAll={false}
+                  style={{marginTop: 41, marginHorizontal: 5}}
+                />
+                <View
+                  style={[
+                    styles.summaryContainer,
+                    {
+                      width: dimensions.SCREEN_WIDTH * 0.9,
+                      alignSelf: 'center',
+                      borderWidth: 1,
+                      borderColor: Colors.LIGHT_PURPLE,
+                      marginTop: 14,
+                    },
+                  ]}>
+                  <View style={[styles.row, {marginBottom: 10}]}>
+                    <MyText
+                      text={`Subtotal (${
+                        cartListData?.items?.length > 0
+                          ? cartListData?.items?.length
+                          : 0
+                      })`}
+                      fontSize={16}
+                      fontFamily={MEDIUM}
+                      textColor={Colors.DARK_PURPLE}
+                      style={{}}
+                    />
+                    <MyText
+                      text={
+                        cartListData?.subTotal
+                          ? '$' + Number(cartListData?.subTotal)?.toFixed(2)
+                          : '$' + 0
+                      }
+                      fontSize={16}
+                      fontFamily={MEDIUM}
+                      textColor={Colors.DARK_PURPLE}
+                      style={{}}
+                    />
+                  </View>
+
+                  <View style={[styles.row, {marginBottom: 19}]}>
+                    <MyText
+                      text={`Tax`}
+                      fontSize={14}
+                      fontFamily={MEDIUM}
+                      textColor={Colors.GREEN}
+                      style={{}}
+                    />
+                    <MyText
+                      text={
+                        cartListData?.tax
+                          ? '$' + Number(cartListData?.tax)?.toFixed(2)
+                          : '$' + 0
+                      }
+                      fontSize={14}
+                      fontFamily={MEDIUM}
+                      textColor={Colors.GREEN}
+                      style={{}}
+                    />
+                  </View>
+                  <Divider
+                    style={{borderColor: '#E0E0E0'}}
+                    color={Colors.LIGHT_PURPLE}
+                  />
+                  <View style={[styles.row, {marginTop: 14}]}>
+                    <MyText
+                      text={`Total`}
+                      fontSize={18}
+                      fontFamily={MEDIUM}
+                      textColor={'#292D32'}
+                      style={{}}
+                    />
+                    <MyText
+                      text={
+                        cartListData?.totalPrice
+                          ? '$' + Number(cartListData?.totalPrice)?.toFixed(2)
+                          : '$' + 0
+                      }
+                      fontSize={18}
+                      fontFamily={MEDIUM}
+                      textColor={'#292D32'}
+                      style={{}}
+                    />
+                  </View>
+                </View>
+                <MyButton
+                  text={'Proceed to payment'}
+                  style={{
+                    width: dimensions.SCREEN_WIDTH * 0.95,
+                    marginBottom: 10,
+                    backgroundColor: Colors.GREEN,
+                    marginTop: 32,
+                    alignSelf: 'center',
+                  }}
+                  onPress={gotoShippingScreen}
+                />
+                <SizeBox height={30} />
+              </>
+            </View>
+          ) : (
+            <View style={{alignItems: 'center', marginTop: 50}}>
+              <NoDataFound text="Your cart is empty" />
+              {/* <MyText
+                text={'Your cart is empty'}
+                fontFamily={MEDIUM}
+                fontSize={40}
+                textAlign="center"
+                textColor={'black'}
+              /> */}
+            </View>
+          )}
+        </ScrollView>
+      </View>
+      {loader && <Loader visible={loader} />}
+      {skeletonLoader && <ListLoader />}
+    </>
   );
 };
 const mapDispatchToProps = dispatch => ({

@@ -12,7 +12,16 @@ import {styles} from './SuccesfulyPurchasedStyle';
 import MyButton from 'component/MyButton/MyButton';
 import {BOLD, REGULAR} from 'global/Fonts';
 
-const SuccessfulyPurchased = ({visible, setVisibility, gotoMyCourses}) => {
+const SuccessfulyPurchased = ({
+  visible,
+  setVisibility,
+  gotoMyCourses,
+  title,
+  description,
+  buttonText,
+  onPress,
+  buttonStyle,
+}) => {
   //variables : navigation
   const navigation = useNavigation();
   //function : navigation function
@@ -38,7 +47,7 @@ const SuccessfulyPurchased = ({visible, setVisibility, gotoMyCourses}) => {
           </View>
 
           <MyText
-            text="Successfully Purchased!"
+            text={title || 'Successfully Purchased!'}
             textColor={Colors.BLACK}
             fontSize={24}
             fontFamily={BOLD}
@@ -46,14 +55,27 @@ const SuccessfulyPurchased = ({visible, setVisibility, gotoMyCourses}) => {
             marginVertical={10}
           />
           <MyText
-            text="Thank you for your purchase. You can now go to My Orders section and check the status."
+            text={
+              description ||
+              'Thank you for your purchase. You can now go to My Orders section and check the status.'
+            }
             textColor={Colors.BLACK}
             fontSize={18}
             fontFamily={REGULAR}
             textAlign="center"
             marginVertical={10}
           />
-          <MyButton text="MY ORDERS" onPress={gotoMyCoursesPress} />
+          <MyButton
+            text={buttonText || 'MY ORDERS'}
+            onPress={() => {
+              if (onPress) {
+                onPress();
+              } else {
+                gotoMyCoursesPress();
+              }
+            }}
+            style={buttonStyle}
+          />
         </View>
       </View>
     </Modal>

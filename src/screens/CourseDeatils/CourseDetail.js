@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   StyleSheet,
+  Platform,
 } from 'react-native';
 //import : custom components
 import Header from 'component/Header/Header';
@@ -44,10 +45,14 @@ import EditReview from 'modals/EditReview/EditReview';
 //import : redux
 import {useDispatch, useSelector} from 'react-redux';
 import {setCartCount} from 'reduxTooklit/CountSlice';
+import {useIsFocused} from '@react-navigation/native';
+import useKeyboardListener from 'component/useKeyboardListener/useKeyboardListener';
 
 const CourseDetail = ({navigation, route}) => {
   // variables : ref
+  const {isKeyboardVisible, keyboardHeight} = useKeyboardListener();
   const {id} = route?.params;
+  const focused = useIsFocused();
   const dispatch = useDispatch();
   const cartCount = useSelector(state => state.count?.cartCount);
   //variables
@@ -67,6 +72,11 @@ const CourseDetail = ({navigation, route}) => {
   const gotoViewCertificate = () => {
     navigation.navigate(ScreenNames.VIEW_PDF, {url: courseData.certificate});
   };
+
+  useEffect(() => {
+    focused && initLoader();
+  }, [focused]);
+
   //function : imp func
   const initLoader = async () => {
     setShowLoader(true);
@@ -164,6 +174,28 @@ const CourseDetail = ({navigation, route}) => {
     }
     setShowAppLoader(false);
   };
+
+  const buyNowHandler = async () => {
+    setShowAppLoader(true);
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const endPoint = `${API_Endpoints.add_cart}?id=${id}&type=1`;
+      const {response, status} = await Service.postAPI(endPoint, {}, token);
+      if (status) {
+        dispatch(setCartCount({cartCount: cartCount + 1}));
+        navigation.navigate(ScreenNames.CART);
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: response?.message,
+        });
+      }
+    } catch (error) {
+      console.error('error in addCourseInToCart', error);
+    }
+    setShowAppLoader(false);
+  };
+
   const removeCourseFromCart = async () => {
     setShowAppLoader(true);
     try {
@@ -190,12 +222,7 @@ const CourseDetail = ({navigation, route}) => {
     }
     setShowAppLoader(false);
   };
-  //hook : useEffect
-  useEffect(() => {
-    initLoader();
 
-    return () => {};
-  }, []);
   //UI
   if (showLoader) {
     return <CourseDetailLoader />;
@@ -408,6 +435,7 @@ const CourseDetail = ({navigation, route}) => {
                   text={'Buy Now'}
                   backgroundColor="#5E4AF7"
                   width="48%"
+                  onPress={buyNowHandler}
                 />
               </View>
             )}
@@ -620,6 +648,9 @@ const CourseDetail = ({navigation, route}) => {
             });
             getCourseDetail();
           }}
+          style={{
+            marginBottom: Platform.OS === 'ios' ? keyboardHeight : 0,
+          }}
         />
         <EditReview
           id={id}
@@ -631,6 +662,9 @@ const CourseDetail = ({navigation, route}) => {
               text1: msg,
             });
             getCourseDetail();
+          }}
+          style={{
+            marginBottom: Platform.OS === 'ios' ? keyboardHeight : 0,
           }}
         />
         <NotPurchase

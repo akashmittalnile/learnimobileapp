@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  Platform,
 } from 'react-native';
 //import : custom components
 import Header from 'component/Header/Header';
@@ -32,11 +33,13 @@ import axios from 'axios';
 import DocView from 'component/DocView/DocView';
 import {useDispatch} from 'react-redux';
 import {setChatCount} from 'reduxTooklit/CountSlice';
+import useKeyboardListener from 'component/useKeyboardListener/useKeyboardListener';
 //import : modals
 //import : redux
 
 const ChatScreen = ({route}) => {
   //variables
+  const {keyboardHeight} = useKeyboardListener();
   const dispatch = useDispatch();
   const {id, name} = route.params;
   const adminId = 1;
@@ -237,7 +240,6 @@ const ChatScreen = ({route}) => {
       name: `file_${Date.now()}`,
       type: isPdf ? 'pdf' : doc?.mime,
     });
-    console.log('qwer 0', formData);
     try {
       const authToken = await AsyncStorage.getItem('token');
       if (!authToken) {
@@ -317,6 +319,7 @@ const ChatScreen = ({route}) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
+            marginBottom: Platform.OS === 'ios' ? keyboardHeight : 0,
             padding: 10,
             backgroundColor: Colors.WHITE,
             borderRadius: 10,

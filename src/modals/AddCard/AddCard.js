@@ -20,6 +20,7 @@ const AddCard = ({
   visible,
   setVisibility,
   callFunctionAfterAddingcard = () => {},
+  style
 }) => {
   //hook : states
   const [showLoader, setShowLoader] = useState(false);
@@ -72,7 +73,7 @@ const AddCard = ({
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.container}>
         <TouchableOpacity style={styles.blurView} onPress={closeModal} />
-        <View style={styles.mainView}>
+        <View style={{...styles.mainView, ...style}}>
           <MyText
             text="Add New Card"
             textColor={'black'}

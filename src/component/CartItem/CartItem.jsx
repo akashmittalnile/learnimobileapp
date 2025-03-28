@@ -1,6 +1,6 @@
 //import : react component
 import React from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, TouchableOpacity} from 'react-native';
 //import : custom components
 import MyText from 'component/MyText/MyText';
 //import : third party
@@ -8,13 +8,17 @@ import MyText from 'component/MyText/MyText';
 import {BOLD, MEDIUM} from 'global/Fonts';
 import {dimensions} from 'global/Constants';
 import Rating from 'assets/images/rating.svg';
-import {Colors} from 'global/index';
+import {Colors, MyIcon} from 'global/index';
 //import : styles
 import {styles} from './CartItemStyle';
 //import : modals
 //import : redux
 
-const CartItem = ({item}) => {
+const CartItem = ({item, onPressDeleteButtonHandler}) => {
+  const onPressDeleteButton = () => {
+    onPressDeleteButtonHandler && onPressDeleteButtonHandler(item);
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -31,15 +35,15 @@ const CartItem = ({item}) => {
           <View
             style={{
               flexDirection: 'row',
-              marginTop:6
+              marginTop: 6,
             }}>
-            <Rating style={{marginRight:3}} />
+            <Rating style={{marginRight: 3}} />
             <MyText text={item.rating} fontSize={14} />
           </View>
           <View
             style={{
               flexDirection: 'row',
-              marginTop:6
+              marginTop: 6,
             }}>
             <MyText
               text={'$ '}
@@ -76,6 +80,9 @@ const CartItem = ({item}) => {
           <MyText text={item.creator_name} fontFamily={MEDIUM} fontSize={12} />
         </View>
       </View>
+      <TouchableOpacity style={styles.delete} onPress={onPressDeleteButton}>
+        <MyIcon.Feather name="trash-2" size={24} color="red" />
+      </TouchableOpacity>
     </View>
   );
 };

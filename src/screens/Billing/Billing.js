@@ -1,6 +1,12 @@
 //import : react components
 import React, {useEffect, useState} from 'react';
-import {View, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 //import : custom components
 import MyText from 'component/MyText/MyText';
@@ -29,8 +35,10 @@ import SuccessfulyPurchased from 'modals/SuccessfulyPurchased.js/SuccessfulyPurc
 import AddCard from 'modals/AddCard/AddCard';
 //import : redux
 import {connect, useSelector} from 'react-redux';
+import useKeyboardListener from 'component/useKeyboardListener/useKeyboardListener';
 
 const Billing = ({navigation, dispatch}) => {
+  const {keyboardHeight} = useKeyboardListener();
   //variables
   //variables : redux
   const userToken = useSelector(state => state.user.userToken);
@@ -95,10 +103,10 @@ const Billing = ({navigation, dispatch}) => {
       if (status) {
         setCardList(response.data);
       } else {
-        Toast.show({
-          type: 'error',
-          text1: response?.message,
-        });
+        // Toast.show({
+        //   type: 'error',
+        //   text1: response?.message,
+        // });
       }
     } catch (error) {
       console.error('error in getData', error);
@@ -540,6 +548,7 @@ const Billing = ({navigation, dispatch}) => {
           // setShowLoader={setShowLoader}
           userToken={userToken}
           callFunctionAfterAddingcard={() => getData()}
+          style={{marginBottom: Platform.OS === 'ios' ? keyboardHeight : 0}}
         />
       </ScrollView>
       <Loader visible={showLoader} />
